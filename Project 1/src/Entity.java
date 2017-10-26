@@ -15,6 +15,7 @@ public abstract class Entity {
         return image;
     }
 
+    @Override
     public boolean equals(Object o) {
         if(!(o instanceof Entity)) {
             return false;

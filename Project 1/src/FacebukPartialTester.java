@@ -148,17 +148,17 @@ public class FacebukPartialTester {
 		assertEquals(_michelle, new Person("Michelle", new Image("Michelle2.png")));  // should still work
 		assertNotEquals(_michelle, _barack);
 	}
-/*
+
 	@Test
 	public void testFindBestMoment () {
 		assertEquals(_michelle.getOverallHappiestMoment(), _meAndBarack);
 	}
 
-	@Test
-	public void testGetFriendWithWhomIAmHappiest () {
-		assertEquals(_michelle.getFriendWithWhomIAmHappiest(), _barack);
-	}
-*/
+//	@Test
+//	public void testGetFriendWithWhomIAmHappiest () {
+//		assertEquals(_michelle.getFriendWithWhomIAmHappiest(), _barack);
+//	}
+
 	// TODO: write more methods to test getFriendWithWhomIAmHappiest 
 	// TODO: write more methods to test getOverallHappiestMoment 
 	
