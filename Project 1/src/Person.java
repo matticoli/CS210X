@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Person extends LivingEntity {
 
@@ -44,5 +45,34 @@ public class Person extends LivingEntity {
             }
         }
         return happiestMoment;
+    }
+
+    public Person getFriendWithWhomIAmHappiest() {
+        HashMap<Person, Float> happiness = new HashMap<>();
+
+        for(Moment m : Moment.getInstances()) {
+            if(m.getParticipants().contains(this)) {
+                for(LivingEntity e : m.getParticipants()) {
+                    if(e instanceof Person) {
+                        Person p = (Person)e;
+                        if(!happiness.containsKey(p)) {
+                            happiness.put(p,m.getHappiness(this));
+                        } else {
+                            happiness.replace(p, happiness.get(p) + m.getHappiness(this));
+                        }
+                    }
+                }
+            }
+        }
+
+        Person bff = null;
+        float maxHappiness = 0;
+        for(Person p : happiness.keySet()) {
+            if(happiness.get(p) > maxHappiness) {
+                maxHappiness = happiness.get(p);
+                bff = p;
+            }
+        }
+        return bff;
     }
 }
