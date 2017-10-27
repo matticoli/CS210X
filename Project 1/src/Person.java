@@ -56,7 +56,7 @@ public class Person extends LivingEntity {
                     if(e instanceof Person) {
                         Person p = (Person)e;
                         if(!happiness.containsKey(p)) {
-                            happiness.put(p,m.getHappiness(this));
+                            happiness.put(p,m.getHappiness(p));
                         } else {
                             happiness.replace(p, happiness.get(p) + m.getHappiness(this));
                         }

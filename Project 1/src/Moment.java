@@ -23,7 +23,11 @@ public class Moment extends Entity {
     }
 
     public float getHappiness(Person p) {
-        return participants.get(p);
+        if(participants.get(p)!=null) {
+            return participants.get(p);
+        } else {
+            return 0.0f;
+        }
     }
 
     public ArrayList<LivingEntity> getParticipants() {
