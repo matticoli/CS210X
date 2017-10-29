@@ -27,8 +27,25 @@ public class LivingEntity extends Entity {
         //returns a list containing the maximum clique of friends with whom the target person / pet could go out with, such that each of his/her friends is also friends with everyone else in the set.
         throw new ExecutionControl.NotImplementedException("Method Not Implemented.");
     }
-    public static boolean isClique(ArrayList set) throws ExecutionControl.NotImplementedException {
-        //returns true if and only if all the people / pets in the specified set are ALL friends with each other.
-        throw new ExecutionControl.NotImplementedException("Method not Implemented. ");
+
+    public static boolean isClique(ArrayList<LivingEntity> set){
+        for (LivingEntity a : set) {
+            for (LivingEntity b : set) {
+                if( !a.getFriends().contains(b)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static ArrayList<LivingEntity> mutualFriendsFinder(LivingEntity livingEntity, LivingEntity livingEntity1) {
+        ArrayList<LivingEntity> mutual = new ArrayList<>();
+        for (LivingEntity friend : livingEntity.getFriends()) {
+            if (livingEntity1.getFriends().contains(friend)) {
+                mutual.add(friend);
+            }
+        }
+        return mutual;
     }
 }

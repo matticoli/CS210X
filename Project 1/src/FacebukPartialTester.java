@@ -1,8 +1,10 @@
-import static org.junit.Assert.*;
-import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * This is a SUBSET of the unit tests with which we will grade your code.
@@ -48,6 +50,12 @@ public class FacebukPartialTester {
 		michelleFriends.add(_kevin);
 		michelleFriends.add(_barack);
 		michelleFriends.add(_ina);
+		michelleFriends.add(_bo);
+		final ArrayList barackFriends = new ArrayList();
+		barackFriends.add(_michelle);
+		barackFriends.add(_kevin);
+		barackFriends.add(_bo);
+		_barack.setFriends(barackFriends);
 
 		// Michelle and Barack
 		_michelleAndBarack = new ArrayList();
@@ -78,17 +86,20 @@ public class FacebukPartialTester {
 		// Bo
 		final ArrayList boList = new ArrayList();
 		boList.add(_bo);
+		final ArrayList boFriends = new ArrayList();
+		boFriends.add(_michelle);
+		boFriends.add(_barack);
 
 		// Set people's friend lists
 		_michelle.setFriends(michelleFriends);
 		_malia.setFriends(boList);
 		_sunny.setFriends(boList);
-		_barack.setFriends(michelleList);
+		_barack.setFriends(barackFriends);
 		_kevin.setFriends(michelleList);
 		_ina.setFriends(michelleList);
 	
 		// Finish configuring pets
-		_bo.setFriends(maliaAndSunny);
+		_bo.setFriends(boFriends);
 		_sunny.setFriends(maliaAndBo);
 		final ArrayList boAndSunny = new ArrayList();
 		boAndSunny.add(_bo);
@@ -161,7 +172,14 @@ public class FacebukPartialTester {
 
 	// TODO: write more methods to test getFriendWithWhomIAmHappiest 
 	// TODO: write more methods to test getOverallHappiestMoment 
-	
+	@Test
+	public void testIsClique(){
+		ArrayList<LivingEntity> set = new ArrayList<>();
+		set.add(_michelle);
+		set.add(_bo);
+
+		assertEquals(_barack.isClique(set), true);
+	}
 	// TODO: write methods to test isClique 
 	// TODO: write methods to test findMaximumCliqueOfFriends
 }
