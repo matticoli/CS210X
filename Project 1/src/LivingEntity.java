@@ -1,5 +1,3 @@
-import jdk.jshell.spi.ExecutionControl;
-
 import java.util.ArrayList;
 
 public class LivingEntity extends Entity {
@@ -23,29 +21,33 @@ public class LivingEntity extends Entity {
         this.moments = moments;
     }
 
-    public ArrayList findMaximumCliqueOfFriends() throws ExecutionControl.NotImplementedException {
+    public ArrayList<LivingEntity> findMaximumCliqueOfFriends() {
         //returns a list containing the maximum clique of friends with whom the target person / pet could go out with, such that each of his/her friends is also friends with everyone else in the set.
-        throw new ExecutionControl.NotImplementedException("Method Not Implemented.");
+        ArrayList<LivingEntity> clique = new ArrayList<>();
+        for (LivingEntity ent : this.getFriends()) {
+            if (isClique(new ArrayList<LivingEntity>() {{
+                add(LivingEntity.this);
+                add(ent);
+                addAll(clique);
+            }})) {
+                clique.add(ent);
+            }
+        }
+        return clique;
     }
 
-    public static boolean isClique(ArrayList<LivingEntity> set){
+    public static boolean isClique(ArrayList<LivingEntity> set) {
         for (LivingEntity a : set) {
             for (LivingEntity b : set) {
-                if( !a.getFriends().contains(b)) {
-                    return false;
+                if (!a.equals(b)) {
+                    if (!a.getFriends().contains(b)) {
+                        return false;
+                    }
                 }
             }
         }
         return true;
     }
 
-    private static ArrayList<LivingEntity> mutualFriendsFinder(LivingEntity livingEntity, LivingEntity livingEntity1) {
-        ArrayList<LivingEntity> mutual = new ArrayList<>();
-        for (LivingEntity friend : livingEntity.getFriends()) {
-            if (livingEntity1.getFriends().contains(friend)) {
-                mutual.add(friend);
-            }
-        }
-        return mutual;
-    }
+
 }

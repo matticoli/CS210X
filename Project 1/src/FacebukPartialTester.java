@@ -8,178 +8,198 @@ import static org.junit.Assert.assertNotEquals;
 
 /**
  * This is a SUBSET of the unit tests with which we will grade your code.
- *
+ * <p>
  * Make absolute sure that your code can compile together with this tester!
  * If it does not, you may get a very low grade for your assignment.
  */
 public class FacebukPartialTester {
-	private Person _barack, _michelle, _kevin, _ina, _joe, _malia;
-	private Pet _bo, _sunny;
-	private Moment _meAndBarack;
-	private ArrayList _michelleAndBarack, _michelleJoeBoAndMalia;
+    private Person _barack, _michelle, _kevin, _ina, _joe, _malia;
+    private Pet _bo, _sunny;
+    private Moment _meAndBarack;
+    private ArrayList _michelleAndBarack, _michelleJoeBoAndMalia;
+    private Person _buddy, _buddy2, _buddy3;
 
-	@Before
-	public void setUp () {
-		initPeople();
-		initPets();
-		initGroups();
-		initPossessions();
-		initMoments();
-	}
+    @Before
+    public void setUp() {
+        initPeople();
+        initPets();
+        initGroups();
+        initPossessions();
+        initMoments();
+        initTestIsClique();
+    }
 
-	private void initPeople () {
-		_michelle = new Person("Michelle", new Image("Michelle.png"));
-		_barack = new Person("Barack", new Image("Barack.png"));
-		_kevin = new Person("Kevin", new Image("Kevin.png"));
-		_ina = new Person("Ina", new Image("Ina.png"));
-		_joe = new Person("Joe", new Image("Joe.png"));
-		_malia = new Person("Malia", new Image("Malia.png"));
-	}
+    private void initTestIsClique() {
+        _buddy = new Person("Tom", new Image("Tom.jpg"));
+        _buddy2 = new Person("Dick", new Image("Dick.jpg"));
+        _buddy3 = new Person("Harry", new Image("Harry.jpg"));
+        ArrayList<LivingEntity> friendsList = new ArrayList<>();
+        friendsList.add(_buddy2);
+        friendsList.add(_buddy3);
+        _buddy.setFriends(friendsList);
+        friendsList = new ArrayList<>();
+        friendsList.add(_buddy);
+        friendsList.add(_buddy3);
+        _buddy2.setFriends(friendsList);
+        friendsList = new ArrayList<>();
+        friendsList.add(_buddy);
+        friendsList.add(_buddy2);
+        _buddy3.setFriends(friendsList);
 
-	private void initPets () {
-		_bo = new Pet("Bo", new Image("Bo.png"));
-		_sunny = new Pet("Sunny", new Image("Sunny.png"));
+    }
 
-		_bo.setOwner(_barack);
-		_sunny.setOwner(_michelle);
-	}
+    private void initPeople() {
+        _michelle = new Person("Michelle", new Image("Michelle.png"));
+        _barack = new Person("Barack", new Image("Barack.png"));
+        _kevin = new Person("Kevin", new Image("Kevin.png"));
+        _ina = new Person("Ina", new Image("Ina.png"));
+        _joe = new Person("Joe", new Image("Joe.png"));
+        _malia = new Person("Malia", new Image("Malia.png"));
+    }
 
-	private void initGroups () {
-		// Kevin, Barack, and Ina
-		final ArrayList michelleFriends = new ArrayList();
-		michelleFriends.add(_kevin);
-		michelleFriends.add(_barack);
-		michelleFriends.add(_ina);
-		michelleFriends.add(_bo);
-		final ArrayList barackFriends = new ArrayList();
-		barackFriends.add(_michelle);
-		barackFriends.add(_kevin);
-		barackFriends.add(_bo);
-		_barack.setFriends(barackFriends);
+    private void initPets() {
+        _bo = new Pet("Bo", new Image("Bo.png"));
+        _sunny = new Pet("Sunny", new Image("Sunny.png"));
 
-		// Michelle and Barack
-		_michelleAndBarack = new ArrayList();
-		_michelleAndBarack.add(_michelle);
-		_michelleAndBarack.add(_barack);
+        _bo.setOwner(_barack);
+        _sunny.setOwner(_michelle);
+    }
 
-		// Michelle, Joe, Bo, and Malia
-		_michelleJoeBoAndMalia = new ArrayList();
-		_michelleJoeBoAndMalia.add(_michelle);
-		_michelleJoeBoAndMalia.add(_joe);
-		_michelleJoeBoAndMalia.add(_bo);
-		_michelleJoeBoAndMalia.add(_malia);
+    private void initGroups() {
+        // Kevin, Barack, and Ina
+        final ArrayList michelleFriends = new ArrayList();
+        michelleFriends.add(_kevin);
+        michelleFriends.add(_barack);
+        michelleFriends.add(_ina);
+        michelleFriends.add(_bo);
 
-		// Malia and Sunny
-		final ArrayList maliaAndSunny = new ArrayList();
-		maliaAndSunny.add(_malia);
-		maliaAndSunny.add(_sunny);
 
-		// Malia and Bo
-		final ArrayList maliaAndBo = new ArrayList();
-		maliaAndSunny.add(_malia);
-		maliaAndSunny.add(_bo);
+        // Michelle and Barack
+        _michelleAndBarack = new ArrayList();
+        _michelleAndBarack.add(_michelle);
+        _michelleAndBarack.add(_barack);
 
-		// Michelle
-		final ArrayList michelleList = new ArrayList();
-		michelleList.add(_michelle);
+        // Michelle, Joe, Bo, and Malia
+        _michelleJoeBoAndMalia = new ArrayList();
+        _michelleJoeBoAndMalia.add(_michelle);
+        _michelleJoeBoAndMalia.add(_joe);
+        _michelleJoeBoAndMalia.add(_bo);
+        _michelleJoeBoAndMalia.add(_malia);
 
-		// Bo
-		final ArrayList boList = new ArrayList();
-		boList.add(_bo);
-		final ArrayList boFriends = new ArrayList();
-		boFriends.add(_michelle);
-		boFriends.add(_barack);
+        // Malia and Sunny
+        final ArrayList maliaAndSunny = new ArrayList();
+        maliaAndSunny.add(_malia);
+        maliaAndSunny.add(_sunny);
 
-		// Set people's friend lists
-		_michelle.setFriends(michelleFriends);
-		_malia.setFriends(boList);
-		_sunny.setFriends(boList);
-		_barack.setFriends(barackFriends);
-		_kevin.setFriends(michelleList);
-		_ina.setFriends(michelleList);
-	
-		// Finish configuring pets
-		_bo.setFriends(boFriends);
-		_sunny.setFriends(maliaAndBo);
-		final ArrayList boAndSunny = new ArrayList();
-		boAndSunny.add(_bo);
-		boAndSunny.add(_sunny);
-		_michelle.setPets(boAndSunny);
-	}
+        // Malia and Bo
+        final ArrayList maliaAndBo = new ArrayList();
+        maliaAndSunny.add(_malia);
+        maliaAndSunny.add(_bo);
 
-	private void initPossessions () {
-		final Possession boxingBag = new Possession("BoxingBag", new Image("BoxingBag.png"), 20.0f);
-		boxingBag.setOwner(_michelle);
-		final ArrayList michellePossessions = new ArrayList();
-		michellePossessions.add(boxingBag);
-		_michelle.setPossessions(michellePossessions);
-	}
+        // Michelle
+        final ArrayList michelleList = new ArrayList();
+        michelleList.add(_michelle);
 
-	private void initMoments () {
-		// Smiles
-		final ArrayList michelleAndBarackSmiles = new ArrayList();
-		michelleAndBarackSmiles.add(0.25f);
-		michelleAndBarackSmiles.add(0.75f);
+        // Bo
+        final ArrayList boList = new ArrayList();
+        boList.add(_bo);
 
-		final ArrayList michelleJoeBoAndMaliaSmiles = new ArrayList();
-		michelleJoeBoAndMaliaSmiles.add(0.2f);
-		michelleJoeBoAndMaliaSmiles.add(0.3f);
-		michelleJoeBoAndMaliaSmiles.add(0.4f);
-		michelleJoeBoAndMaliaSmiles.add(0.5f);
+        // Set people's friend lists
+        _michelle.setFriends(michelleFriends);
+        _malia.setFriends(boList);
+        _sunny.setFriends(boList);
+        _barack.setFriends(michelleFriends);
+        _kevin.setFriends(michelleList);
+        _ina.setFriends(michelleList);
 
-		// Moments
-		_meAndBarack = new Moment("Me & Barack", new Image("MeAndBarack.png"), _michelleAndBarack, michelleAndBarackSmiles);
-		final Moment meJoeAndCo = new Moment("Me, Joe & co.", new Image("MeJoeAndCo.png"), _michelleJoeBoAndMalia, michelleJoeBoAndMaliaSmiles);
+        // Finish configuring pets
+        _bo.setFriends(boList);
+        _sunny.setFriends(maliaAndBo);
+        final ArrayList boAndSunny = new ArrayList();
+        boAndSunny.add(_bo);
+        boAndSunny.add(_sunny);
+        _michelle.setPets(boAndSunny);
+    }
 
-		final ArrayList michelleMoments = new ArrayList();
-		michelleMoments.add(_meAndBarack);
-		michelleMoments.add(meJoeAndCo);
-		_michelle.setMoments(michelleMoments);
+    private void initPossessions() {
+        final Possession boxingBag = new Possession("BoxingBag", new Image("BoxingBag.png"), 20.0f);
+        boxingBag.setOwner(_michelle);
+        final ArrayList michellePossessions = new ArrayList();
+        michellePossessions.add(boxingBag);
+        _michelle.setPossessions(michellePossessions);
+    }
 
-		final ArrayList barackMoments = new ArrayList();
-		barackMoments.add(_meAndBarack);
-		_barack.setMoments(barackMoments);
+    private void initMoments() {
+        // Smiles
+        final ArrayList michelleAndBarackSmiles = new ArrayList();
+        michelleAndBarackSmiles.add(0.25f);
+        michelleAndBarackSmiles.add(0.75f);
 
-		final ArrayList joeMoments = new ArrayList();
-		joeMoments.add(meJoeAndCo);
-		_joe.setMoments(joeMoments);
+        final ArrayList michelleJoeBoAndMaliaSmiles = new ArrayList();
+        michelleJoeBoAndMaliaSmiles.add(0.2f);
+        michelleJoeBoAndMaliaSmiles.add(0.3f);
+        michelleJoeBoAndMaliaSmiles.add(0.4f);
+        michelleJoeBoAndMaliaSmiles.add(0.5f);
 
-		final ArrayList maliaMoments = new ArrayList();
-		maliaMoments.add(meJoeAndCo);
-		_malia.setMoments(maliaMoments);
+        // Moments
+        _meAndBarack = new Moment("Me & Barack", new Image("MeAndBarack.png"), _michelleAndBarack, michelleAndBarackSmiles);
+        final Moment meJoeAndCo = new Moment("Me, Joe & co.", new Image("MeJoeAndCo.png"), _michelleJoeBoAndMalia, michelleJoeBoAndMaliaSmiles);
 
-		final ArrayList boMoments = new ArrayList();
-		boMoments.add(meJoeAndCo);
-		_bo.setMoments(boMoments);
-	}
+        final ArrayList michelleMoments = new ArrayList();
+        michelleMoments.add(_meAndBarack);
+        michelleMoments.add(meJoeAndCo);
+        _michelle.setMoments(michelleMoments);
 
-	@Test
-	public void testEquals () {
-		assertEquals(_michelle, new Person("Michelle", new Image("Michelle.png")));
-		assertEquals(_michelle, new Person("Michelle", new Image("Michelle2.png")));  // should still work
-		assertNotEquals(_michelle, _barack);
-	}
+        final ArrayList barackMoments = new ArrayList();
+        barackMoments.add(_meAndBarack);
+        _barack.setMoments(barackMoments);
 
-	@Test
-	public void testFindBestMoment () {
-		assertEquals(_michelle.getOverallHappiestMoment(), _meAndBarack);
-	}
+        final ArrayList joeMoments = new ArrayList();
+        joeMoments.add(meJoeAndCo);
+        _joe.setMoments(joeMoments);
 
-	@Test
-	public void testGetFriendWithWhomIAmHappiest () {
-		assertEquals(_michelle.getFriendWithWhomIAmHappiest(), _barack);
-	}
+        final ArrayList maliaMoments = new ArrayList();
+        maliaMoments.add(meJoeAndCo);
+        _malia.setMoments(maliaMoments);
 
-	// TODO: write more methods to test getFriendWithWhomIAmHappiest 
-	// TODO: write more methods to test getOverallHappiestMoment 
-	@Test
-	public void testIsClique(){
-		ArrayList<LivingEntity> set = new ArrayList<>();
-		set.add(_michelle);
-		set.add(_bo);
+        final ArrayList boMoments = new ArrayList();
+        boMoments.add(meJoeAndCo);
+        _bo.setMoments(boMoments);
+    }
 
-		assertEquals(_barack.isClique(set), true);
-	}
-	// TODO: write methods to test isClique 
-	// TODO: write methods to test findMaximumCliqueOfFriends
+    @Test
+    public void testEquals() {
+        assertEquals(_michelle, new Person("Michelle", new Image("Michelle.png")));
+        assertEquals(_michelle, new Person("Michelle", new Image("Michelle2.png")));  // should still work
+        assertNotEquals(_michelle, _barack);
+    }
+
+    @Test
+    public void testFindBestMoment() {
+        assertEquals(_michelle.getOverallHappiestMoment(), _meAndBarack);
+    }
+
+    @Test
+    public void testGetFriendWithWhomIAmHappiest() {
+        assertEquals(_michelle.getFriendWithWhomIAmHappiest(), _barack);
+    }
+
+    @Test
+    public void testIsClique() {
+
+        ArrayList<LivingEntity> set = new ArrayList<>();
+        set.add(_buddy);
+        set.add(_buddy2);
+        set.add(_buddy3);
+        assertEquals(LivingEntity.isClique(set), true);
+    }
+
+    @Test
+    public void testFindMaximumCliqueOfFriends() {
+        ArrayList<LivingEntity> set = new ArrayList<>();
+        set.add(_buddy2);
+        set.add(_buddy3);
+        assertEquals(_buddy.findMaximumCliqueOfFriends(), set);
+    }
+
 }
