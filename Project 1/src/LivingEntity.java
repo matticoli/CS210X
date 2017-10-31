@@ -17,7 +17,7 @@ public class LivingEntity extends Entity {
         this.friends = friends;
     }
 
-    public void setMoments(ArrayList<Moment> friends) {
+    public void setMoments(ArrayList<Moment> moments) {
         this.moments = moments;
     }
 
