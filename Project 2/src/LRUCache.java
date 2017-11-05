@@ -7,7 +7,12 @@ public class LRUCache<T, U> implements Cache<T, U> {
      * @param provider the data provider to consult for a cache miss
      * @param capacity the exact number of (key,value) pairs to store in the cache
      */
+    DataProvider provider;
+    int capacity;
+
     public LRUCache(DataProvider<T, U> provider, int capacity) {
+        this.provider = provider;
+        this.capacity = capacity;
     }
 
     /**

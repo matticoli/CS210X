@@ -9,5 +9,4 @@ interface Cache<T, U> extends DataProvider<T, U> {
      * @return the number of cache misses since the object's instantiation.
      */
     int getNumMisses();
-    U get(T key);
 }
