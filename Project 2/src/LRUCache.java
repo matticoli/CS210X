@@ -7,20 +7,28 @@ import java.util.Queue;
  * eviction policy.
  */
 public class LRUCache<T, U> implements Cache<T, U> {
+    // Data provider to query from on cache miss
+    private DataProvider<T,U> provider;
+    // Max capacity of cache
+    private int capacity;
+    // Number of cache misses since instantiation
+    private int numMisses = 0;
+
+    // Cached Data
+    private HashMap<T,U> cache;
+    // Maps key to number of recent queries for key within last [capacity] queries
+    private HashMap<T,Integer> queries;
+    // FIFO Queue containing last [capacity] queried keys
+    private Queue<T> queue;
+
+
     /**
      * @param provider the data provider to consult for a cache miss
      * @param capacity the exact number of (key,value) pairs to store in the cache
      */
-    private DataProvider<T,U> provider;
-    private int capacity;
-    private int numMisses = 0;
-    private HashMap<T,U> dataset;
-    private LinkedList<T> queue;
-
-
     public LRUCache(DataProvider<T, U> provider, int capacity) {
-        dataset = new HashMap<T,U>(capacity);
-        queue = new LinkedList<T>();
+        cache = new HashMap<T,U>(capacity);
+        queue = new LinkedList<T>(capacity);
         this.provider = provider;
         this.capacity = capacity;
     }
@@ -33,21 +41,38 @@ public class LRUCache<T, U> implements Cache<T, U> {
      */
     public U get(T key) {
         U x = null;
-        if (!dataset.containsKey(key)){
-            if (dataset.size() == capacity) {
-                    dataset.remove(queue.remove());
-            }
-          x = provider.get(key);
-            dataset.put(key,x);
-            queue.add(key);
+        if (!cache.containsKey(key)) {
+            // Cache Miss
             numMisses++;
+            if (cache.size() == capacity) {
+                // Remove tail key in queue from cache if there isn't a more recent call
+                maybeRemove(queue.poll());
+            }
+            queue.add(key);
+            cache.put(key, provider.get(key));
+            if(queries.containsKey(key)) {
+                queries.replace(key, queries.get(key)+1);
+            } else {
+                queries.put(key, 1);
+            }
         }
         else{
-            x = dataset.get(key);
-            queue.remove(queue.indexOf(key));
+            x = cache.get(key);
+            queue.poll();
             queue.add(key);
         }
-        return x;  // TODO -- implement!
+        return x;
+    }
+
+    public void maybeRemove(T key) {
+        // Note: Queries should always contain key, as an item is never added to the cache without being tracked
+        int recentQueries = queries.get(key);
+        if(recentQueries<=0) {
+            cache.remove(key);
+            queries.remove(key);
+        } else {
+            queries.replace(key, recentQueries-1);
+        }
     }
 
     /**
@@ -57,5 +82,10 @@ public class LRUCache<T, U> implements Cache<T, U> {
      */
     public int getNumMisses() {
         return numMisses;
+    }
+
+    @Override
+    public String toString() {
+        return cache.toString();
     }
 }
