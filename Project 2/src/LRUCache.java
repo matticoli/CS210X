@@ -1,5 +1,5 @@
 import java.util.HashMap;
-
+//TODO: Optimize variable privacy and add setters/getters?
 /**
  * An implementation of <tt>Cache</tt> that uses a least-recently-used (LRU)
  * eviction policy.
