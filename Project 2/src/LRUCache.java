@@ -28,7 +28,8 @@ public class LRUCache<T, U> implements Cache<T, U> {
      */
     public LRUCache(DataProvider<T, U> provider, int capacity) {
         cache = new HashMap<T,U>(capacity);
-        queue = new LinkedList<T>(capacity);
+        queries = new HashMap<T,Integer>(capacity);
+        queue = new LinkedList<T>();
         this.provider = provider;
         this.capacity = capacity;
     }
@@ -41,37 +42,39 @@ public class LRUCache<T, U> implements Cache<T, U> {
      */
     public U get(T key) {
         U x = null;
+        queue.add(key);
+        if(queries.containsKey(key)) {
+            queries.replace(key, queries.get(key)+1);
+        } else {
+            queries.put(key, 1);
+        }
+
         if (!cache.containsKey(key)) {
             // Cache Miss
             numMisses++;
-            if (cache.size() == capacity) {
-                // Remove tail key in queue from cache if there isn't a more recent call
-                maybeRemove(queue.poll());
+
+            // If cache is full, evict LRU element
+            if(cache.size() >= capacity) {
+                while(!maybeRemove(queue.poll()));
             }
-            queue.add(key);
-            cache.put(key, provider.get(key));
-            if(queries.containsKey(key)) {
-                queries.replace(key, queries.get(key)+1);
-            } else {
-                queries.put(key, 1);
-            }
+            U val = provider.get(key);
+            cache.put(key, val);
+            return val;
+        } else {
+            return cache.get(key);
         }
-        else{
-            x = cache.get(key);
-            queue.poll();
-            queue.add(key);
-        }
-        return x;
     }
 
-    public void maybeRemove(T key) {
+    public boolean maybeRemove(T key) {
         // Note: Queries should always contain key, as an item is never added to the cache without being tracked
         int recentQueries = queries.get(key);
-        if(recentQueries<=0) {
+        if(recentQueries<=1) {
             cache.remove(key);
             queries.remove(key);
+            return true;
         } else {
             queries.replace(key, recentQueries-1);
+            return false;
         }
     }
 
