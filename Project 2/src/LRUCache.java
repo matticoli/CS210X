@@ -21,13 +21,13 @@ class Node<T, U> {
 }
 
 public class LRUCache<T, U> implements Cache<T, U> {
-    HashMap<T, Node> map = new HashMap<T, Node>();
+   private HashMap<T, Node> map = new HashMap<T, Node>();
     // Max capacity of cache
     private int capacity;
     // Number of cache misses since instantiation
     private int numMisses = 0;
-    Node headNode = null;
-    Node tailNode = null;
+    private Node headNode = null;
+    private Node tailNode = null;
     // Data provider to query from on cache miss
     private DataProvider<T, U> provider;
 
@@ -37,6 +37,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
      */
     public LRUCache(DataProvider<T, U> provider, int capacity) {
         this.capacity = capacity;
+        this.provider = provider;
     }
 
     /**
@@ -46,13 +47,13 @@ public class LRUCache<T, U> implements Cache<T, U> {
      * @return the value associated with the key
      */
     public U get(T key) {
-        if (map.containsKey(key)) {
+        if(!map.containsKey(key)){
+            set(key, provider.get(key));
+        }
             Node n = map.get(key);
             removeNode(n);
             setHead(n);
             return (U) n.getNodeValue(); //should be returning U, is returning object. Casting back to U
-        }
-
     }
 
     //removes specified node from the list.
