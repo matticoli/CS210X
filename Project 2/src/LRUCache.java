@@ -50,9 +50,9 @@ public class LRUCache<T, U> implements Cache<T, U> {
             Node n = map.get(key);
             removeNode(n);
             setHead(n);
-            return (U) n.getNodeValue(); //should be returning U, is returning object. Parsing back to U
+            return (U) n.getNodeValue(); //should be returning U, is returning object. Casting back to U
         }
-        return null;
+
     }
 
     //removes specified node from the list.
