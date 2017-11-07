@@ -1,36 +1,41 @@
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * An implementation of <tt>Cache</tt> that uses a least-recently-used (LRU)
  * eviction policy.
  */
+class Node<T, U> {
+    T nodeKey;
+    U nodeValue;
+    Node previousNode;
+    Node nextNode;
+
+    Node(T key, U val) {
+        this.nodeKey = key;
+        this.nodeValue = val;
+    }
+
+    public U getNodeValue() {
+        return nodeValue;
+    }
+}
+
 public class LRUCache<T, U> implements Cache<T, U> {
-    // Data provider to query from on cache miss
-    private DataProvider<T,U> provider;
+    HashMap<T, Node> map = new HashMap<T, Node>();
     // Max capacity of cache
     private int capacity;
     // Number of cache misses since instantiation
     private int numMisses = 0;
-
-    // Cached Data
-    private HashMap<T,U> cache;
-    // Maps key to number of recent queries for key within last [capacity] queries
-    private HashMap<T,Integer> queries;
-    // FIFO Queue containing last [capacity] queried keys
-    private Queue<T> queue;
-
+    Node headNode = null;
+    Node tailNode = null;
+    // Data provider to query from on cache miss
+    private DataProvider<T, U> provider;
 
     /**
      * @param provider the data provider to consult for a cache miss
      * @param capacity the exact number of (key,value) pairs to store in the cache
      */
     public LRUCache(DataProvider<T, U> provider, int capacity) {
-        cache = new HashMap<T,U>(capacity);
-        queries = new HashMap<T,Integer>(capacity);
-        queue = new LinkedList<T>();
-        this.provider = provider;
         this.capacity = capacity;
     }
 
@@ -41,42 +46,65 @@ public class LRUCache<T, U> implements Cache<T, U> {
      * @return the value associated with the key
      */
     public U get(T key) {
-        U x = null;
-        queue.add(key);
-        if(queries.containsKey(key)) {
-            queries.replace(key, queries.get(key)+1);
-        } else {
-            queries.put(key, 1);
+        if (map.containsKey(key)) {
+            Node n = map.get(key);
+            removeNode(n);
+            setHead(n);
+            return (U) n.getNodeValue(); //should be returning U, is returning object. Parsing back to U
         }
+        return null;
+    }
 
-        if (!cache.containsKey(key)) {
-            // Cache Miss
-            numMisses++;
+    //removes specified node from the list.
+    private void removeNode(Node n) {
+        if (n.previousNode != null) {
+            n.previousNode.nextNode = n.nextNode;
+        } else {
+            headNode = n.nextNode;
+        }
+        if (n.nextNode != null) {
+            n.nextNode.previousNode = n.previousNode;
+        } else {
+            tailNode = n.previousNode;
+        }
+    }
 
-            // If cache is full, evict LRU element
-            if(cache.size() >= capacity) {
-                while(!maybeRemove(queue.poll()));
+
+    //moves a node to the head of the list.
+    private void setHead(Node n) {
+        n.nextNode = headNode;
+        n.previousNode = null;
+        if (headNode != null) {
+            headNode.previousNode = n;
+        }
+        headNode = n;
+        if (tailNode == null) {
+            tailNode = headNode;
+        }
+    }
+
+
+    //sets the value of a node. if the node does not exist, creates one.
+    //if the created node makes the list too big, drops the tail node.
+    private void set(T key, U value) {
+        if (map.containsKey(key)) {
+            Node oldNode = map.get(key);
+            oldNode.nodeValue = value;
+            removeNode(oldNode);
+            setHead(oldNode);
+        } else {
+            Node createdNode = new Node(key, value);
+            if (map.size() >= capacity) {
+                map.remove(tailNode.nodeKey);
+                removeNode(tailNode);
+                setHead(createdNode);
+            } else {
+                setHead(createdNode);
             }
-            U val = provider.get(key);
-            cache.put(key, val);
-            return val;
-        } else {
-            return cache.get(key);
+            map.put(key, createdNode);
         }
     }
 
-    public boolean maybeRemove(T key) {
-        // Note: Queries should always contain key, as an item is never added to the cache without being tracked
-        int recentQueries = queries.get(key);
-        if(recentQueries<=1) {
-            cache.remove(key);
-            queries.remove(key);
-            return true;
-        } else {
-            queries.replace(key, recentQueries-1);
-            return false;
-        }
-    }
 
     /**
      * Returns the number of cache misses since the object's instantiation.
@@ -85,10 +113,5 @@ public class LRUCache<T, U> implements Cache<T, U> {
      */
     public int getNumMisses() {
         return numMisses;
-    }
-
-    @Override
-    public String toString() {
-        return cache.toString();
     }
 }
