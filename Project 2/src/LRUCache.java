@@ -1,33 +1,20 @@
 import java.util.HashMap;
 //TODO: Optimize variable privacy and add setters/getters?
+
 /**
  * An implementation of <tt>Cache</tt> that uses a least-recently-used (LRU)
  * eviction policy.
  */
-class Node<T, U> {
-    T nodeKey;
-    U nodeValue;
-    Node previousNode;
-    Node nextNode;
 
-    Node(T key, U val) {
-        this.nodeKey = key;
-        this.nodeValue = val;
-    }
-
-    public U getNodeValue() {
-        return nodeValue;
-    }
-}
 
 public class LRUCache<T, U> implements Cache<T, U> {
-   private HashMap<T, Node> map = new HashMap<T, Node>();
+    private HashMap<T, Node<T, U>> map;
     // Max capacity of cache
     private int capacity;
     // Number of cache misses since instantiation
     private int numMisses = 0;
-    private Node headNode = null;
-    private Node tailNode = null;
+    private Node<T, U> headNode = null;
+    private Node<T, U> tailNode = null;
     // Data provider to query from on cache miss
     private DataProvider<T, U> provider;
 
@@ -36,6 +23,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
      * @param capacity the exact number of (key,value) pairs to store in the cache
      */
     public LRUCache(DataProvider<T, U> provider, int capacity) {
+        map = new HashMap<>(capacity * 2);
         this.capacity = capacity;
         this.provider = provider;
     }
@@ -47,17 +35,19 @@ public class LRUCache<T, U> implements Cache<T, U> {
      * @return the value associated with the key
      */
     public U get(T key) {
-        if(!map.containsKey(key)){
-            set(key, provider.get(key));
+        if (!map.containsKey(key)) { //cache miss
+            set(key, provider.get(key)); //add to cache
+            numMisses++;
         }
-            Node n = map.get(key);
-            removeNode(n);
-            setHead(n);
-            return (U) n.getNodeValue(); //should be returning U, is returning object. Casting back to U
+        //cache hit
+        final Node<T, U> n = map.get(key);
+        removeNode(n);
+        setHead(n);
+        return n.getNodeValue();
     }
 
     //removes specified node from the list.
-    private void removeNode(Node n) {
+    private void removeNode(Node<T, U> n) {
         if (n.previousNode != null) {
             n.previousNode.nextNode = n.nextNode;
         } else {
@@ -72,7 +62,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
 
 
     //moves a node to the head of the list.
-    private void setHead(Node n) {
+    private void setHead(Node<T, U> n) {
         n.nextNode = headNode;
         n.previousNode = null;
         if (headNode != null) {
@@ -89,23 +79,18 @@ public class LRUCache<T, U> implements Cache<T, U> {
     //if the created node makes the list too big, drops the tail node.
     private void set(T key, U value) {
         if (map.containsKey(key)) {
-            Node oldNode = map.get(key);
+            final Node<T, U> oldNode = map.get(key);
             oldNode.nodeValue = value;
-            removeNode(oldNode);
-            setHead(oldNode);
         } else {
-            Node createdNode = new Node(key, value);
+            final Node<T, U> createdNode = new Node<>(key, value);
             if (map.size() >= capacity) {
                 map.remove(tailNode.nodeKey);
                 removeNode(tailNode);
-                setHead(createdNode);
-            } else {
-                setHead(createdNode);
             }
+            setHead(createdNode);
             map.put(key, createdNode);
         }
     }
-
 
     /**
      * Returns the number of cache misses since the object's instantiation.
@@ -114,5 +99,29 @@ public class LRUCache<T, U> implements Cache<T, U> {
      */
     public int getNumMisses() {
         return numMisses;
+    }
+
+    public String toString() {
+        String s = "";
+        for (Node<T, U> cursor = headNode; cursor != null; cursor = cursor.nextNode) {
+            s = s.concat(", " + cursor.getNodeValue());
+        }
+        return s.substring(2);
+    }
+
+    private class Node<X, Y> {
+        X nodeKey;
+        Y nodeValue;
+        Node<X, Y> previousNode;
+        Node<X, Y> nextNode;
+
+        public Node(X key, Y val) {
+            this.nodeKey = key;
+            this.nodeValue = val;
+        }
+
+        public Y getNodeValue() {
+            return nodeValue;
+        }
     }
 }
