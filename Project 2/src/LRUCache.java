@@ -47,7 +47,6 @@ public class LRUCache<T, U> implements Cache<T, U> {
         }
         //cache hit
         final Node<T, U> n = map.get(key);
-        System.out.println(n);
         removeNode(n);
         setHead(n);
         return n.getValue();
