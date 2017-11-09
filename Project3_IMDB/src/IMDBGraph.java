@@ -1,9 +1,25 @@
-package src;
-
 import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
 
 public class IMDBGraph implements Graph {
-    private File ACTOR_LIST;
-    private File ACTRESS_LIST;
+    protected File actorFile;
+    protected File actressFile;
 
+IMDBGraph(String actorFileName, String actressFileName) throws IOException{
+    actorFile = new File(actorFileName);
+    actressFile = new File(actressFileName);
+}
+
+
+
+    @Override
+    public Collection<? extends Node> getNodes() {
+        return null;
+    }
+
+    @Override
+    public Node getNodeByName(String name) {
+        return null;
+    }
 }
