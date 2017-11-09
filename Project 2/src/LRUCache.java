@@ -1,20 +1,22 @@
 import java.util.HashMap;
-//TODO: Optimize variable privacy and add setters/getters?
 
 /**
  * An implementation of <tt>Cache</tt> that uses a least-recently-used (LRU)
  * eviction policy.
  */
 
-
 public class LRUCache<T, U> implements Cache<T, U> {
+    // Cached data
     private HashMap<T, Node<T, U>> map;
     // Max capacity of cache
     private int capacity;
     // Number of cache misses since instantiation
     private int numMisses = 0;
+
+    // LinkedList End Pointers
     private Node<T, U> headNode = null;
     private Node<T, U> tailNode = null;
+
     // Data provider to query from on cache miss
     private DataProvider<T, U> provider;
 
@@ -23,7 +25,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
      * @param capacity the exact number of (key,value) pairs to store in the cache
      */
     public LRUCache(DataProvider<T, U> provider, int capacity) {
-        map = new HashMap<>(capacity * 2);
+        this.map = new HashMap<>(capacity * 2);
         this.capacity = capacity;
         this.provider = provider;
     }
@@ -36,17 +38,26 @@ public class LRUCache<T, U> implements Cache<T, U> {
      */
     public U get(T key) {
         if (!map.containsKey(key)) { //cache miss
-            set(key, provider.get(key)); //add to cache
+            U val = provider.get(key);
+            if(val != null) {
+                set(key, val); //add to cache
+            }
             numMisses++;
+            return val;
         }
         //cache hit
         final Node<T, U> n = map.get(key);
+        System.out.println(n);
         removeNode(n);
         setHead(n);
-        return n.getNodeValue();
+        return n.getValue();
     }
 
-    //removes specified node from the list.
+    /**
+     * Removes a node from the linked list that tracks queries
+     *
+     * @param n Node to remove
+     */
     private void removeNode(Node<T, U> n) {
         if (n.previousNode != null) {
             n.previousNode.nextNode = n.nextNode;
@@ -61,7 +72,11 @@ public class LRUCache<T, U> implements Cache<T, U> {
     }
 
 
-    //moves a node to the head of the list.
+    /**
+     * Moves a node to the head of the query list.
+     *
+     * @param n Node to add to head of list
+     */
     private void setHead(Node<T, U> n) {
         n.nextNode = headNode;
         n.previousNode = null;
@@ -75,8 +90,13 @@ public class LRUCache<T, U> implements Cache<T, U> {
     }
 
 
-    //sets the value of a node. if the node does not exist, creates one.
-    //if the created node makes the list too big, drops the tail node.
+    /**
+     * Sets the value of a node. if the node does not exist, creates one.
+     * If the created node makes the list too big, drops the tail node.
+     *
+     * @param key Key to add to cache
+     * @param value Value from provider corresponding to Key
+     */
     private void set(T key, U value) {
         if (map.containsKey(key)) {
             final Node<T, U> oldNode = map.get(key);
@@ -101,26 +121,39 @@ public class LRUCache<T, U> implements Cache<T, U> {
         return numMisses;
     }
 
+    @Override
     public String toString() {
         String s = "";
         for (Node<T, U> cursor = headNode; cursor != null; cursor = cursor.nextNode) {
-            s = s.concat(", " + cursor.getNodeValue());
+            s = s.concat(", " + cursor.getValue());
         }
         return s.substring(2);
     }
 
+
+    /**
+     * Defines a cache Node (key-value pair corresponding to provider data) with references to
+     * adjacent queries for tracking order
+     *
+     * @param <X> Key type
+     * @param <Y> Value type
+     */
     private class Node<X, Y> {
-        X nodeKey;
-        Y nodeValue;
-        Node<X, Y> previousNode;
-        Node<X, Y> nextNode;
+        // NOTE: Since Node class is defined within LRUCache, private fields of nodes can be accessed directly
+        // without getters/setters.
+        private X nodeKey;
+        private Y nodeValue;
+        private Node<X, Y> previousNode, nextNode;
 
         public Node(X key, Y val) {
             this.nodeKey = key;
             this.nodeValue = val;
         }
 
-        public Y getNodeValue() {
+        /**
+         * @return The value corresponding to the node's key
+         */
+        public Y getValue() {
             return nodeValue;
         }
     }
