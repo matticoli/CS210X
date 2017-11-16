@@ -7,7 +7,7 @@ public class IMDBGraph implements Graph {
     protected File actorFile;
     protected File actressFile;
 
-    private HashMap<String, Node> nodeMap;
+    protected HashMap<String, Node> nodeMap;
 
     IMDBGraph(String actorFileName, String actressFileName) throws IOException{
         nodeMap = new HashMap<>();
