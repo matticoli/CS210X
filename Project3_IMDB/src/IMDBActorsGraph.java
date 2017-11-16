@@ -8,6 +8,7 @@ public class IMDBActorsGraph extends IMDBGraph implements Graph {
     private HashMap<String, Movie> movieNodes;
     IMDBActorsGraph(String actorFileName, String actressFileName) throws IOException {
         super(actorFileName, actressFileName);
+        movieNodes = new HashMap<>();
         parseFile(actorFile);
         parseFile(actressFile);
     }
