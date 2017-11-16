@@ -66,10 +66,10 @@ public class GraphPartialTester {
     /**
      * Verifies that there is a shortest path between a specific and actor and actress.
      */ public void assertShortestPath() {
-        final Node actor1 = actorsGraph.getNodeByName("A., Yacine");
-        final Node actress2 = actorsGraph.getNodeByName("A., Yahya");
-        final List<Node> shortestPath = searchEngine.findShortestPath(actor1, actress2);
-        assertEquals(shortestPath.get(1), new Movie("Ma 6-T va crack-er (1997)"));  // there is a path between these people
+        final Node actor1 = actorsGraph.getNodeByName("Aaberg, Andrew");
+        final Node actor2 = actorsGraph.getNodeByName("Aaberg, Anthony");
+        final List<Node> shortestPath = searchEngine.findShortestPath(actor1, actor2);
+        assertEquals(shortestPath, new Movie("Same Difference (2015)"));  // there is a path between these people
     }
 
     /**
