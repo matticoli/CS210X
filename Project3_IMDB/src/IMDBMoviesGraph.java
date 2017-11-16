@@ -31,7 +31,6 @@ public class IMDBMoviesGraph extends IMDBGraph implements Graph {
                 try {
                     final String movieTitle = line.substring(line.lastIndexOf('\t') + 1, line.indexOf(")") + 1);
                     if(nodeMap.containsKey(movieTitle)) {
-                        System.out.println("I EXIST!" + movieTitle);
                         movie = (Movie) nodeMap.get(movieTitle);
                         movie.addActor(actor);
                     }

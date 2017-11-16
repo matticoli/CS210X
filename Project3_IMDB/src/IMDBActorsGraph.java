@@ -22,9 +22,14 @@ public class IMDBActorsGraph extends IMDBGraph implements Graph {
                 continue;
             }
             if(line.charAt(0) != '\t') { //If this line starts a new actor's list of movies
-                final String actorName = line.substring(0, line.indexOf('\t'));
-                actor = new Actor(actorName);
-                put(actorName, actor);
+                try {
+
+                    final String actorName = line.substring(0, line.indexOf('\t'));
+                    actor = new Actor(actorName);
+                    put(actorName, actor);
+                } catch(IndexOutOfBoundsException e) {
+                    while(s.hasNextLine() && s.nextLine().length() != 0);
+                }
             }
             if(!line.contains("(TV)") && !line.contains("\"")) { //If this is not a TV show or TV movie
                 try {
@@ -42,8 +47,10 @@ public class IMDBActorsGraph extends IMDBGraph implements Graph {
                     }
                     actor.addMovie(movie);
                 } catch (IndexOutOfBoundsException e) {
-                continue;
-            }
+                    continue;
+                }
+            } else {
+                while(s.hasNextLine() && s.nextLine().length() != 0);
             }
         }
     }
