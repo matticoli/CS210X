@@ -27,8 +27,9 @@ public class IMDBMoviesGraph extends IMDBGraph implements Graph {
                 actorNodes.put(actorName, actor);
             }
             if(!line.contains("(TV)") && !line.contains("\"")) { //If this is not a TV show or TV movie
-                final String movieTitle = line.substring(line.lastIndexOf('\t'), line.indexOf(")") + 1);
                 final Movie movie;
+                try {
+                    final String movieTitle = line.substring(line.lastIndexOf('\t') + 1, line.indexOf(")") + 1);
                 if(nodeMap.containsKey(movieTitle)) {
                     movie = (Movie) nodeMap.get(movieTitle);
                     movie.addActor(actor);
@@ -39,6 +40,9 @@ public class IMDBMoviesGraph extends IMDBGraph implements Graph {
                     put(movieTitle, movie);
                 }
                 actor.addMovie(movie);
+                } catch (IndexOutOfBoundsException e) {
+                    continue;
+                }
             }
         }
     }

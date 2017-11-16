@@ -27,8 +27,8 @@ public class GraphPartialTester {
     /**
      * Instantiates the actors and movies graphs
      */ public void setUp() throws IOException {
-        actorsGraph = new IMDBActorsGraph("actors_test.list", "actresses_test.list");
-        moviesGraph = new IMDBMoviesGraph("actors_test.list", "actresses_test.list");
+        actorsGraph = new IMDBActorsGraph("actorsmini.list", "actressesmini.list");
+        moviesGraph = new IMDBMoviesGraph("actorsmini.list", "actressesmini.list");
         searchEngine = new GraphSearchEngineImpl();
     }
 
