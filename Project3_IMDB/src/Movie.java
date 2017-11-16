@@ -24,4 +24,8 @@ public class Movie implements Node {
     public Collection<? extends Node> getNeighbors() {
         return actors;
     }
+
+    public String toString() {
+        return this.name+ actors.toString();
+    }
 }

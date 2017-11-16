@@ -28,4 +28,8 @@ public class IMDBGraph implements Graph {
     public Node getNodeByName(String name) {
         return nodeMap.get(name);
     }
+
+    public String toString() {
+        return nodeMap.toString();
+    }
 }
