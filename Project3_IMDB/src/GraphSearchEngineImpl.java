@@ -38,17 +38,17 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
         while(!done) {
             final Node n = toSearch.poll();
             final Integer d = distances.poll();
-            if(n == null) { //All nodes connected to s have been examined, but t has not been found. No path exists from s to t.
-                return false;
+            if(n == null) { //All nodes connected to s have been examined, but t has not been found.
+                return false; //No path exists from s to t.
             }
             if(n.equals(t)) {
                 done = true;
             }
             if(!distancesToS.containsKey(n)) { //If n has not been visited yet:
-                distancesToS.put(n, d + 1);
-                toSearch.addAll(n.getNeighbors());
+                distancesToS.put(n, d); //n is distance d from s.
                 for(Node n2: n.getNeighbors()) {
-                    distances.add(d + 2);
+                    distances.add(d + 1); //n's neighbors are distance d+1 from s.
+                    toSearch.add(n2);
                 }
             }
         }
