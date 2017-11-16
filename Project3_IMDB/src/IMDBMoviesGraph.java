@@ -5,14 +5,23 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class IMDBMoviesGraph extends IMDBGraph implements Graph {
-    private HashMap<String, Actor> actorNodes = new HashMap<String, Actor>();
+    private HashMap<String, Node> actorNodes = new HashMap<String, Node>();
 
     IMDBMoviesGraph(String actorFileName, String actressFileName) throws IOException {
         super(actorFileName, actressFileName);
-        parseFile(actorFile);
-        parseFile(actressFile);
+/*        parseFile(actorFile);
+        parseFile(actressFile);*/
     }
-    private void parseFile(File f) throws FileNotFoundException {
+
+    protected HashMap<String, Node> getActorHash(){
+        return actorNodes;
+    }
+
+    protected HashMap<String, Node> getMovieHash(){
+        return nodeMap;
+    }
+
+    /*private void parseFile(File f) throws FileNotFoundException {
         Scanner s = new Scanner(f, "ISO-8859-1");
         Actor actor = new Actor("");
         while (s.hasNextLine() && !s.nextLine().startsWith("----\t"));
@@ -45,6 +54,6 @@ public class IMDBMoviesGraph extends IMDBGraph implements Graph {
                 }
             }
         }
-    }
+    }*/
 
 }

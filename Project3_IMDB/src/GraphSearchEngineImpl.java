@@ -14,9 +14,8 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
     @Override
     public List<Node> findShortestPath(Node s, Node t) {
         final HashMap<Node, Integer> distancesToS = new HashMap<Node, Integer>(); //distance from each key to s.
-        final boolean pathExists = findT(s, t, distancesToS); //fill distanceToS with relevant key, value pairs. Find out if a path exists.
-        if(!pathExists) {
-            return null;
+        if(findT(s, t, distancesToS)) { //Fill distanceToS with relevant key, value pairs.
+            return null; //if path does not exist
         }
         return makePath(t, distancesToS);
     }
@@ -64,9 +63,9 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
         final List<Node> path = new LinkedList<Node>();
         path.add(t);
         for(int i = distancesToS.get(t) - 1; i >= 0; i--) { //backtracking
-            for(Node n : path.get(0).getNeighbors()) { //out of all of path.get(i + 1)'s neighbors,
-                if(distancesToS.get(n) == i) { // which is 1 step closer to s?
-                    path.add(0, n); //add it to the path
+            for(Node n : path.get(0).getNeighbors()) { //Out of all of path.get(i + 1)'s neighbors,
+                if(distancesToS.get(n) == i) { //which is 1 step closer to s?
+                    path.add(0, n); //Add it to the path.
                     break;
                 }
             }
