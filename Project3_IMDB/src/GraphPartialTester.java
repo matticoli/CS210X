@@ -1,10 +1,11 @@
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Code to test Project 3; you should definitely add more tests!
@@ -13,22 +14,14 @@ public class GraphPartialTester {
     Graph actorsGraph, moviesGraph;
     GraphSearchEngine searchEngine;
 
-    @Test(timeout = 5000)
-    /**
-     * Verifies that there is no shortest path between a specific and actor and actress.
-     */ public void findShortestPath() {
-        final Node actor1 = actorsGraph.getNodeByName("Actor1");
-        final Node actress2 = actorsGraph.getNodeByName("Actress2");
-        final List<Node> shortestPath = searchEngine.findShortestPath(actor1, actress2);
-        assertNull(shortestPath);  // there is no path between these people
-    }
-
     @Before
     /**
      * Instantiates the actors and movies graphs
      */ public void setUp() throws IOException {
-        actorsGraph = new IMDBActorsGraph("actorsmini.list", "actressesmini.list");
-        moviesGraph = new IMDBMoviesGraph("actorsmini.list", "actressesmini.list");
+        actorsGraph = new IMDBActorsGraph("Project3_IMDB/actors_test.list", "Project3_IMDB/actresses_test.list");
+        moviesGraph = new IMDBMoviesGraph("Project3_IMDB/actors_test.list", "Project3_IMDB/actresses_test.list");
+        //actorsGraph = new IMDBActorsGraph("actorsmini.list", "actressesmini.list");
+        //moviesGraph = new IMDBMoviesGraph("actorsmini.list", "actressesmini.list");
         searchEngine = new GraphSearchEngineImpl();
     }
 
@@ -52,6 +45,33 @@ public class GraphPartialTester {
      * Verifies that a specific actress has been parsed.
      */ public void testSpecificActress() {
         testFindNode(actorsGraph, "Actress2");
+    }
+
+    @Test
+    /**
+     * Verifies that a specific actress has been parsed.
+     */ public void testSpecificActor() {
+        testFindNode(actorsGraph, "Actor2");
+    }
+
+    @Test(timeout = 5000)
+    /**
+     * Verifies that there is no shortest path between a specific and actor and actress.
+     */ public void assertNoShortestPath() {
+        final Node actor1 = actorsGraph.getNodeByName("Actor1");
+        final Node actress2 = actorsGraph.getNodeByName("Actress2");
+        final List<Node> shortestPath = searchEngine.findShortestPath(actor1, actress2);
+        assertNull(shortestPath);  // there is no path between these people
+    }
+
+    @Test(timeout = 5000)
+    /**
+     * Verifies that there is a shortest path between a specific and actor and actress.
+     */ public void assertShortestPath() {
+        final Node actor1 = actorsGraph.getNodeByName("Actor2");
+        final Node actress2 = actorsGraph.getNodeByName("Actress2");
+        final List<Node> shortestPath = searchEngine.findShortestPath(actor1, actress2);
+        assertEquals(shortestPath.get(0), new Movie("Movie 2"));  // there is a path between these people
     }
 
     /**
