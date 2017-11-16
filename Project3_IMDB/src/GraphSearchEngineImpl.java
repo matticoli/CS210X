@@ -61,12 +61,12 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
      * @return a shortest path in the form of a List of Node objects.
      */
     private static List<Node> makePath(Node t, HashMap<Node, Integer> distancesToS) {
-        final List<Node> path = new ArrayList<Node>(distancesToS.get(t) + 1);
-        path.set(path.size() - 1, t);
-        for(int i = path.size() - 2; i >= 0; i--) { //backtracking
-            for(Node n : path.get(i + 1).getNeighbors()) { //out of all of path.get(i + 1)'s neighbors,
+        final List<Node> path = new LinkedList<Node>();
+        path.add(t);
+        for(int i = distancesToS.get(t) - 1; i >= 0; i--) { //backtracking
+            for(Node n : path.get(0).getNeighbors()) { //out of all of path.get(i + 1)'s neighbors,
                 if(distancesToS.get(n) == i) { // which is 1 step closer to s?
-                    path.set(i, n); //add it to the path
+                    path.add(0, n); //add it to the path
                     break;
                 }
             }

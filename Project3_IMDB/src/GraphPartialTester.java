@@ -20,10 +20,6 @@ public class GraphPartialTester {
      */ public void setUp() throws IOException {
         actorsGraph = new IMDBActorsGraph("Project3_IMDB/actorsmini.list", "Project3_IMDB/actressesmini.list");
         moviesGraph = new IMDBMoviesGraph("Project3_IMDB/actorsmini.list", "Project3_IMDB/actressesmini.list");
-        System.out.println(actorsGraph);
-        System.out.println(moviesGraph);
-        //actorsGraph = new IMDBActorsGraph("actorsmini.list", "actressesmini.list");
-        //moviesGraph = new IMDBMoviesGraph("actorsmini.list", "actressesmini.list");
         searchEngine = new GraphSearchEngineImpl();
     }
 
@@ -73,7 +69,7 @@ public class GraphPartialTester {
         final Node actor1 = actorsGraph.getNodeByName("A., Yacine");
         final Node actress2 = actorsGraph.getNodeByName("A., Yahya");
         final List<Node> shortestPath = searchEngine.findShortestPath(actor1, actress2);
-        assertEquals(shortestPath.get(0), new Movie("Ma 6-T va crack-er (1997)"));  // there is a path between these people
+        assertEquals(shortestPath.get(1), new Movie("Ma 6-T va crack-er (1997)"));  // there is a path between these people
     }
 
     /**
