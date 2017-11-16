@@ -13,8 +13,8 @@ public abstract class IMDBGraph implements Graph {
 
     /**
      *
-     * @param actorFileName absolute path of the
-     * @param actressFileName
+     * @param actorFileName absolute path of the file containing actors
+     * @param actressFileName absolute path of the file containing actresses
      * @throws IOException
      */
     IMDBGraph(String actorFileName, String actressFileName) throws IOException{
