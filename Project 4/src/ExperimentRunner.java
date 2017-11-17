@@ -9,10 +9,10 @@ import java.util.Random;
  */
 public class ExperimentRunner {
     private static final int NUM_DATA_STRUCTURES_TO_DEDUCE = 5;
-    private static final int NUM_TRIALS_TO_RUN = 100;
+    private static final int NUM_TRIALS_TO_RUN = 5;
     private static final int SMALLEST_SETSIZE = 1;
     private static final int LARGEST_SETSIZE = 100000;
-    private static final int INCREMENT = 10000;
+    private static final int INCREMENT = 10;
 
     public static void main(String[] args) {
         final String cs210XTeamIDForProject4 = "mamatticoli"; // TODO CHANGE THIS TO THE TEAM ID YOU USE TO SUBMIT YOUR PROJECT3 ON INSTRUCT-ASSIST.
@@ -32,33 +32,21 @@ public class ExperimentRunner {
         //TODO FIX THIS PIECE OF SHIT
         for (int i = 0; i < NUM_DATA_STRUCTURES_TO_DEDUCE; i++) { //for each data structure
             //for each set size
-            System.out.println("\n\nDATA SET "+(i+1));
+            System.out.println("\n\nMystery Data Structure " + (i + 1));
             System.out.println("Random Search");
-            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N += INCREMENT) {
-                System.out.print(N+"\t");
-            }
-            System.out.println();
-            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N += INCREMENT) {
-                //print(N, timeForRandomSearch(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN),("Data Structure " + (i + 1)), "Random Search");
-                System.out.print(timeForRandomSearch(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN) + "\t");
+            System.out.printf("%-10S  %-10S%n", "SET SIZE", ("AVERAGE TIME OF " + NUM_TRIALS_TO_RUN + " TRIALS"));
+            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N *= INCREMENT) {
+                System.out.printf("%-10d  %-10d%n", N, timeForRandomSearch(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN));
             }
             System.out.println("\nAdd To Structure");
-            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N += INCREMENT) {
-                System.out.print(N+"\t");
-            }
-            System.out.println();
-            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N += INCREMENT) {
-                // print(N, timeForOperationAdd(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN),("Data Structure " + (i + 1)), "Add to Structure");
-                System.out.print(timeForOperationAdd(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN) + "\t");
+            System.out.printf("%-10S  %-10S%n", "SET SIZE", ("AVERAGE TIME OF " + NUM_TRIALS_TO_RUN + " TRIALS"));
+            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N *= INCREMENT) {
+                System.out.printf("%-10d  %-10d%n", N, timeForOperationAdd(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN));
             }
             System.out.println("\nRemove From Structure");
-            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N += INCREMENT) {
-                System.out.print(N+"\t");
-            }
-            System.out.println();
-            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N += INCREMENT) {
-                // print(N, timeForOperationRemove(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN),("Data Structure " + (i + 1)), "Remove from Structure");
-                System.out.print(timeForOperationRemove(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN) + "\t");
+            System.out.printf("%-10S  %-10S%n", "SET SIZE", ("AVERAGE TIME OF " + NUM_TRIALS_TO_RUN + " TRIALS"));
+            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N *= INCREMENT) {
+                System.out.printf("%-10d  %-10d%n", N, timeForOperationRemove(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN));
             }
         }
     }
@@ -117,10 +105,4 @@ public class ExperimentRunner {
         return averageTime;
     }
 
-    public static void print(int size, long averageTime, String name, String operation) {
-        System.out.println("=========== " + name + " || " + operation + "===========");
-
-        System.out.println("Size of Dataset\t||\tAvg. Time " + NUM_TRIALS_TO_RUN + " Trials: ");
-        System.out.println("" + size + "\t\t|| \t \t " + averageTime);
-    }
 }
