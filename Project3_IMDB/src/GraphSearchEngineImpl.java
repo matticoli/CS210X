@@ -1,6 +1,7 @@
 import java.util.*;
 
 public class GraphSearchEngineImpl implements GraphSearchEngine {
+
     /**
      * Finds a shortest path, if one exists, between nodes s and
      * t. The path will be a list: (s, ..., t). If no
@@ -13,10 +14,11 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
      */
     @Override
     public List<Node> findShortestPath(Node s, Node t) {
-        final HashMap<Node, Integer> distancesToS = new HashMap<Node, Integer>(); //distance from each key to s.
-        if(findT(s, t, distancesToS)) { //Fill distanceToS with relevant key, value pairs.
+        HashMap<Node, Integer> distancesToS = new HashMap<>(); //distance from each key to s.
+        if(!findT(s, t, distancesToS)) { //Fill distanceToS with relevant key-value pairs.
             return null; //if path does not exist
         }
+        // Path does exist, backtrack:
         return makePath(t, distancesToS);
     }
 
@@ -33,24 +35,23 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
         final Queue<Integer> distances = new LinkedList<Integer>(); //distances from s to each node in toSearch
         toSearch.add(s);
         distances.add(0);
-        boolean done = false;
-        while(!done) {
-            final Node n = toSearch.poll();
+
+        Node n;
+        do {
+            n = toSearch.poll();
             final Integer d = distances.poll();
             if(n == null) { //All nodes connected to s have been examined, but t has not been found.
                 return false; //No path exists from s to t.
             }
-            if(n.equals(t)) {
-                done = true;
-            }
+
             if(!distancesToS.containsKey(n)) { //If n has not been visited yet:
                 distancesToS.put(n, d); //n is distance d from s.
-                for(Node n2: n.getNeighbors()) {
+                for(Node neighbor: n.getNeighbors()) {
                     distances.add(d + 1); //n's neighbors are distance d+1 from s.
-                    toSearch.add(n2);
+                    toSearch.add(neighbor);
                 }
             }
-        }
+        } while(! n.equals(t));
         return true;
     }
     /**
@@ -59,7 +60,7 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
      * @param distancesToS hashMap filled with all nodes closer than t to s as keys. Corresponding values are the length of the shortest path from s to the key.
      * @return a shortest path in the form of a List of Node objects.
      */
-    private static List<Node> makePath(Node t, HashMap<Node, Integer> distancesToS) {
+    private List<Node> makePath(Node t, HashMap<Node, Integer> distancesToS) {
         final List<Node> path = new LinkedList<Node>();
         path.add(t);
         for(int i = distancesToS.get(t) - 1; i >= 0; i--) { //backtracking
