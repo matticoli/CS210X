@@ -3,6 +3,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -18,8 +19,8 @@ public class GraphPartialTester {
     /**
      * Instantiates the actors and movies graphs
      */ public void setUp() throws IOException {
-        actorsGraph = new IMDBActorsGraph("Project3_IMDB/actorsmini.list", "Project3_IMDB/actressesmini.list");
-        moviesGraph = new IMDBMoviesGraph("Project3_IMDB/actorsmini.list", "Project3_IMDB/actressesmini.list");
+        actorsGraph = new IMDBActorsGraph("Project3_IMDB/actors.list", "Project3_IMDB/actresses.list");
+        moviesGraph = new IMDBMoviesGraph("Project3_IMDB/actors.list", "Project3_IMDB/actresses.list");
         searchEngine = new GraphSearchEngineImpl();
     }
 
@@ -52,12 +53,12 @@ public class GraphPartialTester {
         testFindNode(actorsGraph, "Aaron, Master");
     }
 
-    @Test(timeout = 5000)
+    @Test
     /**
      * Verifies that there is no shortest path between a specific and actor and actress.
      */ public void assertNoShortestPath() {
-        final Node actor1 = actorsGraph.getNodeByName("Aaron, Nicholas");
-        final Node actress2 = actorsGraph.getNodeByName("Aadhavan");
+        final Node actor1 = actorsGraph.getNodeByName("LaCroix, Rachelle");
+        final Node actress2 = actorsGraph.getNodeByName("Grusby, Greg");
         final List<Node> shortestPath = searchEngine.findShortestPath(actor1, actress2);
         assertNull(shortestPath);  // there is no path between these people
     }
@@ -68,8 +69,16 @@ public class GraphPartialTester {
      */ public void assertShortestPath() {
         final Node actor1 = actorsGraph.getNodeByName("Aaberg, Andrew");
         final Node actor2 = actorsGraph.getNodeByName("Aaberg, Anthony");
-        final List<Node> shortestPath = searchEngine.findShortestPath(actor1, actor2);
-        assertEquals(shortestPath, new Movie("Same Difference (2015)"));  // there is a path between these people
+        List<Node> shortestPath = searchEngine.findShortestPath(actor1, actor2);
+        List<Node> expectedPath = new LinkedList<>();
+        {
+            expectedPath.add(Actor.getOrCreateActor("Aaberg, Andrew"));
+            expectedPath.add(Movie.getOrCreateMovie("Same Difference (2015)"));
+            expectedPath.add(Actor.getOrCreateActor("Aaberg, Anthony"));
+        }
+        assertEquals(expectedPath, shortestPath);  // there is a path between these people
+
+
     }
 
     /**
