@@ -8,45 +8,71 @@ import java.util.Random;
  * Class to deduce the identity of mystery data structures.
  */
 public class ExperimentRunner {
+
+    /**
+     * Number of mystery data structures to fetch
+     */
     private static final int NUM_DATA_STRUCTURES_TO_DEDUCE = 5;
-    private static final int NUM_TRIALS_TO_RUN = 5;
+
+    /**
+     * Number of trials to run/average over for each timing test
+     */
+    private static final int NUM_TRIALS_TO_RUN = 1000;
+    /**
+     * Minimum set size to run trials on
+     */
     private static final int SMALLEST_SETSIZE = 1;
-    private static final int LARGEST_SETSIZE = 100000;
-    private static final int INCREMENT = 10;
+    /**
+     * Maximum set size to run trials on
+     */
+    private static final int LARGEST_SETSIZE = 2501;
+    /**
+     * Set size multiplier for each consecutive set of trials
+     */
+    private static final int INCREMENT = 500;
+
+    /**
+     * Random object for generating random numbers
+     */
+    private static Random random = new Random();
+//    This is defined globally so it does not need to be passed around
 
     public static void main(String[] args) {
-        final String cs210XTeamIDForProject4 = "mamatticoli"; // TODO CHANGE THIS TO THE TEAM ID YOU USE TO SUBMIT YOUR PROJECT3 ON INSTRUCT-ASSIST.
+        final String cs210XTeamIDForProject4 = "mamatticoli";
 
         // Fetch the collections whose type you must deduce.
         // Note -- you are free to change the type parameter from Integer to whatever you want. In this
         // case, make sure to replace (over the next 4 lines of code) Integer with whatever class you prefer.
         // In addition, you'll need to pass the method getMysteryDataStructure a "sample" (an instance) of
         // the class you want the collection to store.
-        @SuppressWarnings("unchecked") final Collection210X<Integer>[] mysteryDataStructures = (Collection210X<Integer>[]) new Collection210X[NUM_DATA_STRUCTURES_TO_DEDUCE];
+        @SuppressWarnings("unchecked")
+        final Collection210X<Integer>[] mysteryDataStructures = (Collection210X<Integer>[]) new Collection210X[NUM_DATA_STRUCTURES_TO_DEDUCE];
         for (int i = 0; i < NUM_DATA_STRUCTURES_TO_DEDUCE; i++) {
             mysteryDataStructures[i] = MysteryDataStructure.getMysteryDataStructure(cs210XTeamIDForProject4.hashCode(), i, new Integer(0));
         }
 
-        // Write your code here...
-        final Random random = new Random();  // instantiate a random number generator
-        //TODO FIX THIS PIECE OF SHIT
-        for (int i = 0; i < NUM_DATA_STRUCTURES_TO_DEDUCE; i++) { //for each data structure
+        int i = 0;
+        for (Collection210X struct : mysteryDataStructures) { //for each data structure
+            i++;
             //for each set size
-            System.out.println("\n\nMystery Data Structure " + (i + 1));
+            System.out.println("\n\nMystery Data Structure " + (i ));
+
             System.out.println("Random Search");
-            System.out.printf("%-10S  %-10S%n", "SET SIZE", ("AVERAGE TIME OF " + NUM_TRIALS_TO_RUN + " TRIALS"));
-            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N *= INCREMENT) {
-                System.out.printf("%-10d  %-10d%n", N, timeForRandomSearch(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN));
+            System.out.printf("%-10S \t %-10S%n", "SET SIZE", ("AVERAGE TIME OF " + NUM_TRIALS_TO_RUN + " TRIALS"));
+            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N += INCREMENT) {
+                System.out.printf("%-10d \t %-10d%n", N, timeForRandomSearch(struct, random, N, NUM_TRIALS_TO_RUN));
             }
+
             System.out.println("\nAdd To Structure");
-            System.out.printf("%-10S  %-10S%n", "SET SIZE", ("AVERAGE TIME OF " + NUM_TRIALS_TO_RUN + " TRIALS"));
-            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N *= INCREMENT) {
-                System.out.printf("%-10d  %-10d%n", N, timeForOperationAdd(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN));
+            System.out.printf("%-10S \t %-10S%n", "SET SIZE", ("AVERAGE TIME OF " + NUM_TRIALS_TO_RUN + " TRIALS"));
+            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N += INCREMENT) {
+                System.out.printf("%-10d \t %-10d%n", N, timeForOperationAdd(struct, random, N, NUM_TRIALS_TO_RUN));
             }
+
             System.out.println("\nRemove From Structure");
-            System.out.printf("%-10S  %-10S%n", "SET SIZE", ("AVERAGE TIME OF " + NUM_TRIALS_TO_RUN + " TRIALS"));
-            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N *= INCREMENT) {
-                System.out.printf("%-10d  %-10d%n", N, timeForOperationRemove(mysteryDataStructures[i], random, N, NUM_TRIALS_TO_RUN));
+            System.out.printf("%-10S \t %-10S%n", "SET SIZE", ("AVERAGE TIME OF " + NUM_TRIALS_TO_RUN + " TRIALS"));
+            for (int N = SMALLEST_SETSIZE; N <= LARGEST_SETSIZE; N += INCREMENT) {
+                System.out.printf("%-10d \t %-10d%n", N, timeForOperationRemove(struct, random, N, NUM_TRIALS_TO_RUN));
             }
         }
     }
