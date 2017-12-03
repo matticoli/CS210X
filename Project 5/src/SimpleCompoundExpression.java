@@ -1,4 +1,5 @@
-package PACKAGE_NAME;
+public class SimpleCompoundExpression extends AbstractCompoundExpression {
+    public SimpleCompoundExpression() {
 
-public class SimpleCompoundExpression {
+    }
 }
