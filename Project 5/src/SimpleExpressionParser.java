@@ -35,7 +35,12 @@ public class SimpleExpressionParser implements ExpressionParser {
 			if(isParentheticalExpression(str)) {
 			// Parenthetical Expression
 				e = new ParentheticalExpression();
-				((ParentheticalExpression) e).addSubexpression(parseExpression(str.substring(1, str.length() - 1)));
+				Expression subexpr = parseExpression(str.substring(1, str.length() - 1));
+				if (subexpr == null) {
+					return null;
+				}
+
+				((ParentheticalExpression) e).addSubexpression(subexpr);
 				return e;
 			} else if(isMultiplicativeExpression(str)) {
 				// Multiplicative
@@ -53,11 +58,12 @@ public class SimpleExpressionParser implements ExpressionParser {
 				((AdditiveExpression) e).addSubexpression(
 						parseExpression(str.substring(1 + str.indexOf("+"))));
 				return e;
+			} else if (str.matches("[0-9]+|[a-z]")) {
+				// If nothing has been returned yet, the expression is either a literal or invalid
+				return new LiteralExpression(str);
+			} else {
+				return null;
 			}
-
-			// If nothing has been returned yet, the expression is either a literal or invalid
-			return new LiteralExpression(str);
-
 		} catch(Exception e) {
 			e.printStackTrace();
 			System.err.println(str+"\n The above expression is invalid");
