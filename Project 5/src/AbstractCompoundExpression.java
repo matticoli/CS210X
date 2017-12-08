@@ -50,14 +50,11 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
         String s = "";
         for(Expression child : this.children) {
             s += child.convertToString(indentLevel + 1);
-            if (child.getClass() == LiteralExpression.class) {
-            	s+="\n";
-			}
         }
         return s;
     }
 
-    protected String getIndentString(int indentLevel) {
+    public static String getIndentString(int indentLevel) {
         String s = "";
         for(int i = 0; i<indentLevel; i++) {
             s+="\t";

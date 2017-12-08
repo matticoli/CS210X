@@ -41,10 +41,8 @@ public class LiteralExpression implements Expression {
 
     @Override
     public String convertToString(int indentLevel) {
-        String s = "";
-        for(int i = 0; i<indentLevel; i++) {
-            s+="\t";
-        }
-        return s+value;
+        StringBuffer s = new StringBuffer();
+        Expression.indent(s, indentLevel);
+        return s.append(value).append("\n").toString();
     }
 }
