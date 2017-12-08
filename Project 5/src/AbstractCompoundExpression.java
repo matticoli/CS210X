@@ -6,6 +6,10 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
     protected LinkedList<Expression> children;
     protected CompoundExpression parent;
 
+    AbstractCompoundExpression() {
+        this.children = new LinkedList<>();
+    }
+
     @Override
     public void addSubexpression(Expression subexpression) {
         children.add(subexpression);
