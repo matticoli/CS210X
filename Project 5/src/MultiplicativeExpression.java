@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 public class MultiplicativeExpression extends AbstractCompoundExpression {
     @Override
     public Expression deepCopy() {
@@ -8,7 +10,7 @@ public class MultiplicativeExpression extends AbstractCompoundExpression {
 
     @Override
     public void flatten() {//TODO Document this
-        children.forEach((child) -> {
+        new LinkedList<Expression>(children).forEach((child) -> {
             child.flatten();
             if (child instanceof MultiplicativeExpression) {
                 ((MultiplicativeExpression) child).getChildren().forEach( (grandchild) -> {
@@ -21,7 +23,7 @@ public class MultiplicativeExpression extends AbstractCompoundExpression {
 
     @Override
     public String convertToString(int indentLevel) {
-        String s = getIndentString(indentLevel)+"*"+"\n";
+        String s = getIndentString(indentLevel)+"*\n";
         return s+super.convertToString(indentLevel);
     }
 }

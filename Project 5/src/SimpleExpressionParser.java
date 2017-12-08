@@ -63,6 +63,11 @@ public class SimpleExpressionParser implements ExpressionParser {
 			System.err.println(str+"\n The above expression is invalid");
 			// Error parsing expression, return null.
 			return null;
+		} catch (AssertionError e) {
+			e.printStackTrace();
+			System.err.println(str+"\n The above expression is invalid");
+			// Error parsing expression, return null.
+			return null;
 		}
 	}
 
