@@ -1,5 +1,3 @@
-import java.util.LinkedList;
-
 public class ParentheticalExpression extends AbstractCompoundExpression {
     @Override
     public Expression deepCopy() {

@@ -1,4 +1,3 @@
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 
 public abstract class AbstractCompoundExpression implements CompoundExpression{
@@ -27,7 +26,7 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
      * returns a list of the children of this expression
      * @return children
      */
-    public LinkedList<Expression> getChildren() {
+    private LinkedList<Expression> getChildren() {
         return this.children;
     }
 
@@ -39,14 +38,13 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
     @Override
     abstract public Expression deepCopy();
 
-    public CompoundExpression deepCopyChildren(CompoundExpression parentCopy) {
+    void deepCopyChildren(CompoundExpression parentCopy) {
         // Deep copy each child and set parent to new copy of this ParentheticalExpression
         children.forEach((child) -> {
             Expression childCopy = child.deepCopy();
             childCopy.setParent(parentCopy);
             parentCopy.addSubexpression(childCopy);
         });
-        return parentCopy;
     }
 
     @Override
@@ -72,13 +70,11 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
     @Override
     public String convertToString(int indentLevel) {
         String s = "";
-        for(Expression child : this.children) {
-            s += child.convertToString(indentLevel + 1);
-        }
+        for(Expression child : this.children) s += child.convertToString(indentLevel + 1);
         return s;
     }
 
-    public static String getIndentString(int indentLevel) {
+    static String getIndentString(int indentLevel) {
         String s = "";
         for(int i = 0; i<indentLevel; i++) {
             s+="\t";

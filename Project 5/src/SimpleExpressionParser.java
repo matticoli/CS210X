@@ -35,7 +35,7 @@ public class SimpleExpressionParser implements ExpressionParser {
 	 * @return the parsed expression
 	 * @throws ExpressionParseException
 	 */
-	protected Expression parseExpression (String str) throws ExpressionParseException {
+	private Expression parseExpression(String str) throws ExpressionParseException {
 		try {
 			Expression e;
 			if(isParentheticalExpression(str)) {
@@ -62,7 +62,7 @@ public class SimpleExpressionParser implements ExpressionParser {
 				e = new AdditiveExpression();
 				((AdditiveExpression) e).addSubexpression(
 						parseExpression(str.substring(0, str.indexOf("+"))));
-				/**
+				/*
 				 * This was a dirty hack due to awful logic.
 				 */
 				if(str.substring(1 + str.indexOf("+")).equals("")){
@@ -96,7 +96,7 @@ public class SimpleExpressionParser implements ExpressionParser {
 	 * @param str Expression to check
 	 * @return True if str is parenthetical, else false.
 	 */
-	protected boolean isParentheticalExpression(String str) {
+	private boolean isParentheticalExpression(String str) {
 		return str.startsWith("(") && str.endsWith(")");
 	}
 
@@ -105,15 +105,13 @@ public class SimpleExpressionParser implements ExpressionParser {
 	 * @param str Expression to check
 	 * @return true if str is multiplicative, else false
 	 */
-	protected boolean isMultiplicativeExpression(String str) {
+	private boolean isMultiplicativeExpression(String str) {
 		if(!str.contains("*")) {
 			// No multiplication sign = not multiplicative
 			return false;
 		} else if(!str.contains("(") && !str.contains("+")) {
 			// No addition or parens = multiplicative
 			return true;
-		}else if(str.contains("+") && !str.contains("(")) {
-			// Contains + and no parens = additive
 		} else if(str.contains("(") && !str.contains("+") && !isParentheticalExpression(str)) {
 			// Contains parens and no +, but isn't parenthetical = multiplicative or invalid
 			return true;
@@ -146,15 +144,9 @@ public class SimpleExpressionParser implements ExpressionParser {
 	 * @param str
 	 * @return true if additive, false if not.
 	 */
-	protected boolean isAdditiveExpression(String str) {
-		if(!str.contains("+")) {
-			// No addition, must be literal or invalid
-			return false;
-		} else if(!str.contains("(") || (str.indexOf("+") < str.indexOf("("))) {
-			// Addition takes place outside of first parenthetical expression, if there is one
-			return true;
-		} else {
-			return false;
-		}
+	private boolean isAdditiveExpression(String str) {
+		// No addition, must be literal or invalid
+		return str.contains("+") && (!str.contains("(") || (str.indexOf("+") < str.indexOf("(")));
+// Addition takes place outside of first parenthetical expression, if there is one
 	}
 }

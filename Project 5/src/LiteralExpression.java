@@ -14,7 +14,7 @@ public class LiteralExpression implements Expression {
      *
      * @param value The numerical value that the LiteralExpression represents
      */
-    public LiteralExpression(String value) {
+    LiteralExpression(String value) {
         this.value = value;
     }
 
@@ -35,8 +35,7 @@ public class LiteralExpression implements Expression {
 
     @Override
     public void flatten() {
-        // Literal is already flat
-        return;
+       //literal is already flat
     }
 
     @Override

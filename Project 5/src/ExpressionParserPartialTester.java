@@ -12,15 +12,15 @@ public class ExpressionParserPartialTester {
 	private ExpressionParser _parser;
 
 	@Before
-	/**
+	/*
 	 * Instantiates the actors and movies graphs
 	 */
-	public void setUp () throws IOException {
+	public void setUp () {
 		_parser = new SimpleExpressionParser();
 	}
 
 	@Test
-	/**
+	/*
 	 * Just verifies that the SimpleExpressionParser could be instantiated without crashing.
 	 */
 	public void finishedLoading () {
@@ -29,7 +29,7 @@ public class ExpressionParserPartialTester {
 	}
 
 	@Test
-	/**
+	/*
 	 * Verifies that a specific expression is parsed into the correct parse tree.
 	 */
 	public void testExpression1 () throws ExpressionParseException {
@@ -39,7 +39,7 @@ public class ExpressionParserPartialTester {
 	}
 
 	@Test
-	/**
+	/*
 	 * Verifies that a specific expression is parsed into the correct parse tree.
 	 */
 	public void testExpression2 () throws ExpressionParseException {
@@ -49,7 +49,7 @@ public class ExpressionParserPartialTester {
 	}
 
 	@Test
-	/**
+	/*
 	 * Verifies that a specific expression is parsed into the correct parse tree.
 	 */
 	public void testExpression3 () throws ExpressionParseException {
@@ -66,7 +66,7 @@ public class ExpressionParserPartialTester {
 	}
 
 	@Test
-	/**
+	/*
 	 * Verifies that a specific expression is parsed into the correct parse tree.
 	 */
 	public void testExpressionAndFlatten1 () throws ExpressionParseException {
@@ -76,7 +76,7 @@ public class ExpressionParserPartialTester {
 	}
 
 	@Test
-	/**
+	/*
 	 * Verifies that a specific expression is parsed into the correct parse tree.
 	 */
 	public void testExpressionAndFlatten2 () throws ExpressionParseException {
@@ -93,7 +93,7 @@ public class ExpressionParserPartialTester {
 	}
 
 	@Test(expected = ExpressionParseException.class)
-	/**
+	/*
 	 * Verifies that a specific expression is parsed into the correct parse tree.
 	 */
 	public void testException1 () throws ExpressionParseException {
@@ -102,7 +102,7 @@ public class ExpressionParserPartialTester {
 	}
 
 	@Test(expected = ExpressionParseException.class)
-	/**
+	/*
 	 * Verifies that a specific expression is parsed into the correct parse tree.
 	 */
 	public void testException2 () throws ExpressionParseException {
@@ -111,7 +111,7 @@ public class ExpressionParserPartialTester {
 	}
 
 	@Test(expected = ExpressionParseException.class)
-	/**
+	/*
 	 * Verifies that a specific expression is parsed into the correct parse tree.
 	 */
 	public void testException3 () throws ExpressionParseException {
@@ -120,7 +120,7 @@ public class ExpressionParserPartialTester {
 	}
 
 	@Test(expected = ExpressionParseException.class)
-	/**
+	/*
 	 * Verifies that a specific expression is parsed into the correct parse tree.
 	 */
 	public void testException4 () throws ExpressionParseException {
