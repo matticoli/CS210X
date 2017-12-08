@@ -49,7 +49,10 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
     public String convertToString(int indentLevel) {
         String s = "";
         for(Expression child : this.children) {
-            s += child.convertToString(indentLevel + 1) + "\n";
+            s += child.convertToString(indentLevel + 1);
+            if (child.getClass() == LiteralExpression.class) {
+            	s+="\n";
+			}
         }
         return s;
     }
