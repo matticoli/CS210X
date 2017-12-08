@@ -43,7 +43,20 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
     }
 
     @Override
-    abstract public void flatten();
+     public void flatten(){
+        for (int i = 0; i<children.size(); i++){
+            Expression exp = children.get(i);
+            exp.flatten();
+            if(exp.getClass() == this.getClass()){
+                this.children.remove(exp);
+                for(int k = i; k<=((AbstractCompoundExpression) exp).children.size();k++)
+                    children.add(k,((AbstractCompoundExpression) exp).children.get(k-i));
+            }
+
+        }
+
+    }
+
 
     @Override
     public String convertToString(int indentLevel) {

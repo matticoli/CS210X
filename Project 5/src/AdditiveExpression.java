@@ -9,19 +9,6 @@ public class AdditiveExpression extends AbstractCompoundExpression {
     }
 
     @Override
-    public void flatten() {//TODO Document this
-        new LinkedList<Expression>(children).forEach((child) -> {
-            child.flatten();
-            if (child instanceof AdditiveExpression) {
-                ((AdditiveExpression) child).getChildren().forEach( (grandchild) -> {
-                    grandchild.setParent(this);
-                    addSubexpression(grandchild);
-                });
-            }
-        });
-    }
-
-    @Override
     public String convertToString(int indentLevel) {
         String s = getIndentString(indentLevel)+"+\n";
         return s+super.convertToString(indentLevel);

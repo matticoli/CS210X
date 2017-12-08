@@ -8,18 +8,7 @@ public class MultiplicativeExpression extends AbstractCompoundExpression {
         return e;
     }
 
-    @Override
-    public void flatten() {//TODO Document this
-        new LinkedList<Expression>(children).forEach((child) -> {
-            child.flatten();
-            if (child instanceof MultiplicativeExpression) {
-                ((MultiplicativeExpression) child).getChildren().forEach( (grandchild) -> {
-                    grandchild.setParent(this);
-                    addSubexpression(grandchild);
-                });
-            }
-        });
-    }
+
 
     @Override
     public String convertToString(int indentLevel) {
