@@ -1,6 +1,7 @@
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 
-public class AbstractCompoundExpression implements CompoundExpression{
+public abstract class AbstractCompoundExpression implements CompoundExpression{
 
     protected LinkedList<Expression> children;
     protected CompoundExpression parent;
@@ -15,30 +16,45 @@ public class AbstractCompoundExpression implements CompoundExpression{
         return this.parent;
     }
 
+    public LinkedList<Expression> getChildren() {
+        return this.children;
+    }
+
     @Override
     public void setParent(CompoundExpression parent) {
         this.parent = parent;
     }
 
     @Override
-    public Expression deepCopy() {
-        CompoundExpression copy = new AbstractCompoundExpression();
-        for(Expression child : children ) {
-            copy.addSubexpression(child.deepCopy());
-            child.setParent(copy);
-        }
+    abstract public Expression deepCopy();
+
+    public CompoundExpression deepCopyChildren(CompoundExpression parentCopy) {
+        // Deep copy each child and set parent to new copy of this ParentheticalExpression
+        children.forEach((child) -> {
+            Expression childCopy = child.deepCopy();
+            childCopy.setParent(parentCopy);
+            parentCopy.addSubexpression(childCopy);
+        });
+        return parentCopy;
     }
 
     @Override
-    public void flatten() {
-
-    }
+    abstract public void flatten();
 
     @Override
     public String convertToString(int indentLevel) {
-        String childrenString = "";
+        String s = "";
         for(Expression child : this.children) {
-            return childrenString + child.convertToString(indentLevel + 1) + "\n";
+            s += child.convertToString(indentLevel + 1) + "\n";
         }
+        return s;
+    }
+
+    protected String getIndentString(int indentLevel) {
+        String s = "";
+        for(int i = 0; i<indentLevel; i++) {
+            s+="\t";
+        }
+        return s;
     }
 }
