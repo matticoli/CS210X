@@ -21,7 +21,7 @@ public class AdditiveExpression extends AbstractCompoundExpression {
 
     @Override
     public String convertToString(int indentLevel) {
-        String s = getIndentString(indentLevel)+"+";
+        String s = getIndentString(indentLevel)+"+"+"\n";
         return s+super.convertToString(indentLevel);
     }
 }
