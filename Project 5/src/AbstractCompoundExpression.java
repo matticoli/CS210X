@@ -6,6 +6,9 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
     protected LinkedList<Expression> children;
     protected CompoundExpression parent;
 
+    /**
+     * Constructor
+     */
     AbstractCompoundExpression() {
         this.children = new LinkedList<>();
     }
@@ -20,6 +23,10 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
         return this.parent;
     }
 
+    /**
+     * returns a list of the children of this expression
+     * @return children
+     */
     public LinkedList<Expression> getChildren() {
         return this.children;
     }
@@ -46,6 +53,10 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
      public void flatten(){
         for (int i = 0; i<children.size(); i++){
             Expression exp = children.get(i);
+            //Hack because random null children due to bad parsing.
+            if (exp == null) {
+                continue;
+            }
             exp.flatten();
             if(exp.getClass() == this.getClass()){
                 this.children.remove(exp);

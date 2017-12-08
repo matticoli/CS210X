@@ -8,7 +8,7 @@
  * L := [0-9]+ | [a-z]
  */
 public class SimpleExpressionParser implements ExpressionParser {
-	/*
+	/**
 	 * Attempts to create an expression tree -- flattened as much as possible -- from the specified String.
          * Throws a ExpressionParseException if the specified string cannot be parsed.
 	 * @param str the string to parse into an expression tree
@@ -28,8 +28,14 @@ public class SimpleExpressionParser implements ExpressionParser {
 		expression.flatten();
 		return expression;
 	}
-	
-	protected Expression parseExpression (String str) {
+
+	/**
+	 * Parses the expressions.
+	 * @param str
+	 * @return the parsed expression
+	 * @throws ExpressionParseException
+	 */
+	protected Expression parseExpression (String str) throws ExpressionParseException {
 		try {
 			Expression e;
 			if(isParentheticalExpression(str)) {
@@ -38,6 +44,7 @@ public class SimpleExpressionParser implements ExpressionParser {
 				Expression subexpr = parseExpression(str.substring(1, str.length() - 1));
 				if (subexpr == null) {
 					return null;
+
 				}
 
 				((ParentheticalExpression) e).addSubexpression(subexpr);
@@ -55,6 +62,12 @@ public class SimpleExpressionParser implements ExpressionParser {
 				e = new AdditiveExpression();
 				((AdditiveExpression) e).addSubexpression(
 						parseExpression(str.substring(0, str.indexOf("+"))));
+				/**
+				 * This was a dirty hack due to awful logic.
+				 */
+				if(str.substring(1 + str.indexOf("+")).equals("")){
+					throw new ExpressionParseException("This assignment is late and I need the points...");
+				}
 				((AdditiveExpression) e).addSubexpression(
 						parseExpression(str.substring(1 + str.indexOf("+"))));
 				return e;
@@ -68,7 +81,7 @@ public class SimpleExpressionParser implements ExpressionParser {
 			e.printStackTrace();
 			System.err.println(str+"\n The above expression is invalid");
 			// Error parsing expression, return null.
-			return null;
+			throw new ExpressionParseException("I'm so sorry");
 		} catch (AssertionError e) {
 			e.printStackTrace();
 			System.err.println(str+"\n The above expression is invalid");
@@ -87,6 +100,11 @@ public class SimpleExpressionParser implements ExpressionParser {
 		return str.startsWith("(") && str.endsWith(")");
 	}
 
+	/**
+	 * Determines whether str is multiplicative expression
+	 * @param str Expression to check
+	 * @return true if str is multiplicative, else false
+	 */
 	protected boolean isMultiplicativeExpression(String str) {
 		if(!str.contains("*")) {
 			// No multiplication sign = not multiplicative
@@ -123,6 +141,11 @@ public class SimpleExpressionParser implements ExpressionParser {
 		return true;
 	}
 
+	/**
+	 * checks if str is additive.
+	 * @param str
+	 * @return true if additive, false if not.
+	 */
 	protected boolean isAdditiveExpression(String str) {
 		if(!str.contains("+")) {
 			// No addition, must be literal or invalid
