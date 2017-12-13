@@ -1,3 +1,6 @@
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+
 public class LiteralExpression implements Expression {
 
     /**
@@ -31,6 +34,11 @@ public class LiteralExpression implements Expression {
     @Override
     public Expression deepCopy() {
         return new LiteralExpression(value);
+    }
+
+    @Override
+    public Node getNode() {
+        return new Label(value);
     }
 
     @Override

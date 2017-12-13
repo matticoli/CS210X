@@ -1,3 +1,7 @@
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+
 public class MultiplicativeExpression extends AbstractCompoundExpression {
     @Override
     public Expression deepCopy() {
@@ -6,6 +10,17 @@ public class MultiplicativeExpression extends AbstractCompoundExpression {
         return e;
     }
 
+    @Override
+    public Node getNode() {
+        HBox boxyMcBoxFace = new HBox();
+        for(int i = 0; i<children.size(); i++) {
+            boxyMcBoxFace.getChildren().add(children.get(i).getNode());
+            if((i<children.size()-1)){
+                boxyMcBoxFace.getChildren().add(new Label("*"));
+            }
+        }
+        return boxyMcBoxFace;
+    }
 
 
     @Override

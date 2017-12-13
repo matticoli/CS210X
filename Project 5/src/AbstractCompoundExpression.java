@@ -1,3 +1,5 @@
+import javafx.scene.Node;
+
 import java.util.LinkedList;
 
 public abstract class AbstractCompoundExpression implements CompoundExpression{
