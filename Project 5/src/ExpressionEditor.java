@@ -5,11 +5,14 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.LinkedList;
@@ -24,6 +27,9 @@ public class ExpressionEditor extends Application {
     static Expression rootExpression;
     static Expression focusedExpression;
     static Pane expressionPane = new Pane();
+
+    static Node ghostNode;
+    static Expression ghostExpression;
 
     /**
      * Size of the GUI
@@ -66,7 +72,7 @@ public class ExpressionEditor extends Application {
                 // If the parsed expression is a CompoundExpression, then register some callbacks
                 if (expression instanceof CompoundExpression) {
                     ((Pane) expression.getNode()).setBorder(Expression.NO_BORDER);
-                    final MouseEventHandler eventHandler = new MouseEventHandler(expressionPane, (CompoundExpression) expression);
+                    final MouseEventHandler eventHandler = new MouseEventHandler((CompoundExpression) expression);
                     expressionPane.setOnMousePressed(eventHandler);
                     expressionPane.setOnMouseDragged(eventHandler);
                     expressionPane.setOnMouseReleased(eventHandler);
@@ -93,15 +99,17 @@ public class ExpressionEditor extends Application {
      */
     private static class MouseEventHandler implements EventHandler<MouseEvent> {
 
-        MouseEventHandler(Pane pane_, CompoundExpression rootExpression_) {
-            rootExpression = (AbstractCompoundExpression) rootExpression_;
+        MouseEventHandler(CompoundExpression rootExpression_) {
+            rootExpression = rootExpression_;
             focusedExpression = rootExpression;
 
         }
 
         public void handle(MouseEvent event) {
             Point2D mouseCoords = new Point2D(event.getX(), event.getY());
-            if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
+
+            // If mouse release and wasn't just dragging, handle focus change
+            if (event.getEventType() == MouseEvent.MOUSE_RELEASED && ghostExpression == null) {
                 if(!(focusedExpression instanceof AbstractCompoundExpression)) {
                     focusedExpression.setFocused(false);
                     ((HBox) focusedExpression.getNode()).setBorder(Expression.NO_BORDER);
@@ -149,9 +157,20 @@ public class ExpressionEditor extends Application {
                 focusedExpression = rootExpression;
                 rootExpression.setFocused(true);
 
-
+            // If drag, handle movement
             } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+                if(ghostExpression == null) {
+                    ghostExpression = focusedExpression.deepCopy();
+                    ghostNode = ghostExpression.getNode(true);
+                    expressionPane.getChildren().add(ghostNode);
+                }
+                System.out.println("relocating");
+                ghostNode.relocate(mouseCoords.getX(), mouseCoords.getY());
+            // If released and just dragging, handle drop
             } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
+                expressionPane.getChildren().remove(ghostNode);
+                ghostNode = null;
+                ghostExpression = null;
             }
         }
     }

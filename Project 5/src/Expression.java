@@ -59,11 +59,19 @@ interface Expression {
 
 
     /**
-     * Returns the JavaFX node associated with this expression.
+     * Returns getNode(false)
      *
-     * @return the JavaFX node associated with this expression.
+     * @return getNode(false)
      */
     Node getNode();
+
+    /**
+     * Returns the JavaFX node associated with this expression.
+     *
+     * @param ghost whether node is a ghost
+     * @return the JavaFX node associated with this expression.
+     */
+    Node getNode(boolean ghost);
 
     /**
      * Recursively flattens the expression as much as possible

@@ -52,9 +52,17 @@ public class LiteralExpression implements Expression {
 
     @Override
     public Node getNode() {
+        return getNode(false);
+    }
+
+    public Node getNode(boolean ghost) {
         if(node == null) {
             HBox box = new HBox();
-            box.getChildren().add(new Label(value));
+            Label l = new Label(value);
+            if(ghost) {
+                l.setOpacity(0.5);
+            }
+            box.getChildren().add(l);
             node = box;
         }
         return node;

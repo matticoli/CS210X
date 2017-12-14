@@ -1,7 +1,10 @@
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
+import java.awt.*;
 import java.util.LinkedList;
 
 public abstract class AbstractCompoundExpression implements CompoundExpression {
@@ -55,7 +58,12 @@ public abstract class AbstractCompoundExpression implements CompoundExpression {
         });
     }
 
+    @Override
     public Node getNode() {
+        return getNode(false);
+    }
+
+    public Node getNode(boolean ghost) {
         if(this.node != null) {
             return this.node;
         } else {
@@ -65,30 +73,36 @@ public abstract class AbstractCompoundExpression implements CompoundExpression {
             if (this instanceof ParentheticalExpression) {
                 hBox.getChildren().add(new Label("("));
                 for (Expression e : children) {
-                    hBox.getChildren().add(e.getNode());
+                    hBox.getChildren().add(e.getNode(ghost));
                 }
                 hBox.getChildren().add(new Label(")"));
-//                hBox.setBorder(Expression.RED_BORDER);
+                if(ghost) {
+                    ((Label)hBox.getChildren().get(0)).setOpacity(0.5);
+                    ((Label)hBox.getChildren().get(hBox.getChildren().size() - 1)).setOpacity(0.5);
+                }
             } else if (this instanceof MultiplicativeExpression) {
                 for (Expression e : children) {
-                    hBox.getChildren().add(e.getNode());
-                    hBox.getChildren().add(new Label(e != children.getLast() ? "*" : ""));
+                    hBox.getChildren().add(e.getNode(ghost));
+                    Label l = new Label(e != children.getLast() ? "*" : "");
+                    if(ghost) {
+                        l.setOpacity(0.5);
+                    }
+                    hBox.getChildren().add(l);
                 }
-//                hBox.setBorder(Expression.GREEN_BORDER);
             } else if (this instanceof AdditiveExpression) {
                 for (Expression e : children) {
-                    hBox.getChildren().add(e.getNode());
-                    hBox.getChildren().add(new Label(e != children.getLast() ? "+" : ""));
+                    hBox.getChildren().add(e.getNode(ghost));
+                    Label l = new Label(e != children.getLast() ? "+" : "");
+                    if(ghost) {
+                        l.setOpacity(0.5);
+                    }
+                    hBox.getChildren().add(l);
                 }
-//                hBox.setBorder(Expression.BLUE_BORDER);
             } else {
                 for (Expression e : children) {
-                    hBox.getChildren().add(e.getNode());
+                    hBox.getChildren().add(e.getNode(ghost));
                 }
-                //hBox.getChildren().add(children.get(i).getNode());
             }
-//            for (int i = 0; i < children.size(); i++) {
-//            }
             this.node = hBox;
             return hBox;
         }
