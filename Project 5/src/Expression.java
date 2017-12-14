@@ -10,6 +10,14 @@ interface Expression {
 	public static final Border RED_BORDER = new Border(
 	  new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)
 	);
+	public static final Border BLUE_BORDER = new Border(
+			new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)
+	);
+
+	public static final Border GREEN_BORDER = new Border(
+			new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)
+	);
+
 
 	/**
 	 * Border for showing a non-focused expression

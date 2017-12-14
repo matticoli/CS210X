@@ -22,17 +22,6 @@ this.focused = focused;
         return e;
     }
 
-    @Override
-    public Node getNode() {
-        HBox boxyMcBoxFace = new HBox();
-        boxyMcBoxFace.getChildren().add(new Label("("));
-        for(Expression e : children) {
-            boxyMcBoxFace.getChildren().add(e.getNode());
-
-        }
-        boxyMcBoxFace.getChildren().add(new Label(")"));
-        return boxyMcBoxFace;
-    }
 
     @Override
     public String convertToString(int indentLevel) {
