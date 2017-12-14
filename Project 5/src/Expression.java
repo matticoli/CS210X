@@ -6,7 +6,7 @@ interface Expression {
 	/**
 	 * Border for showing a focused expression
 	 */
-	boolean focused = false;
+
 	public static final Border RED_BORDER = new Border(
 	  new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)
 	);
@@ -32,6 +32,10 @@ interface Expression {
          * @param parent the CompoundExpression that should be the parent of the target object
          */
 	void setParent (CompoundExpression parent);
+
+	boolean isFocused();
+	void setFocused(boolean focused);
+
 
 	/**
 	 * Creates and returns a deep copy of the expression.

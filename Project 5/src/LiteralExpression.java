@@ -11,7 +11,7 @@ public class LiteralExpression implements Expression {
      * The numerical value that the LiteralExpression represents
      */
     protected String value;
-
+boolean focused = false;
     /**
      * Creates new LiteralExpression with given int value
      *
@@ -29,6 +29,16 @@ public class LiteralExpression implements Expression {
     @Override
     public void setParent(CompoundExpression parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public boolean isFocused() {
+        return focused;
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+this.focused = focused;
     }
 
     @Override

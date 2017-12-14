@@ -43,6 +43,7 @@ public abstract class AbstractCompoundExpression implements CompoundExpression{
     void deepCopyChildren(CompoundExpression parentCopy) {
         // Deep copy each child and set parent to new copy of this ParentheticalExpression
         children.forEach((child) -> {
+
             Expression childCopy = child.deepCopy();
             childCopy.setParent(parentCopy);
             parentCopy.addSubexpression(childCopy);

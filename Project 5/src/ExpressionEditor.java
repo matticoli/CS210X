@@ -28,15 +28,31 @@ public class ExpressionEditor extends Application {
 	 * Mouse event handler for the entire pane that constitutes the ExpressionEditor
 	 */
 	private static class MouseEventHandler implements EventHandler<MouseEvent> {
-		CompoundExpression rootExp;
+		AbstractCompoundExpression rootExp;
 		MouseEventHandler (Pane pane_, CompoundExpression rootExpression_) {
-			rootExp = rootExpression_;
+			rootExp = (AbstractCompoundExpression) rootExpression_;
 		}
 
 		public void handle (MouseEvent event) {
+			//System.out.println(rootExp.convertToString(0));
 			if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
 				Point2D mouseCoords = new Point2D(event.getX(),event.getY());
-				if(rootExp.getNode().getLayoutBounds().contains(mouseCoords)){
+				System.out.println("Mouse Event at "+mouseCoords.toString());
+				for(Expression e : rootExp.children) {
+					System.out.println(e.getNode().localToScene(e.getNode().getBoundsInLocal()));
+					if (e.getNode().getLayoutBounds().contains(mouseCoords)) {
+						e.setFocused(true);
+						((Pane) e.getNode()).setBorder(Expression.RED_BORDER);
+						((Pane)e.getNode()).setStyle("-fx-fill: RED");
+
+
+
+					}
+					else{
+						e.setFocused(false);
+						((Pane)e.getNode()).setBorder(Expression.NO_BORDER);
+						((Pane)e.getNode()).setStyle("-fx-fill: BLACK");
+					}
 
 				}
 			} else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
@@ -79,18 +95,17 @@ public class ExpressionEditor extends Application {
 				try {
 					// Success! Add the expression's Node to the expressionPane
 					final Expression expression = expressionParser.parse(textField.getText(), true);
-					System.out.println(expression.convertToString(0));
 					expressionPane.getChildren().clear();
 					expressionPane.getChildren().add(expression.getNode());
-					expressionPane.setStyle("-fx-font:69 \"Impact\";");
-
-
+					expressionPane.setStyle("-fx-font:36 \"Times\";");
 					expression.getNode().setLayoutX(WINDOW_WIDTH/4);
 					expression.getNode().setLayoutY(WINDOW_HEIGHT/2);
 
 					// If the parsed expression is a CompoundExpression, then register some callbacks
 					if (expression instanceof CompoundExpression) {
-						((Pane) expression.getNode()).setBorder(Expression.NO_BORDER);
+
+							((Pane) expression.getNode()).setBorder(Expression.NO_BORDER);
+
 						final MouseEventHandler eventHandler = new MouseEventHandler(expressionPane, (CompoundExpression) expression);
 						expressionPane.setOnMousePressed(eventHandler);
 						expressionPane.setOnMouseDragged(eventHandler);
@@ -109,7 +124,9 @@ public class ExpressionEditor extends Application {
 		
 		final BorderPane root = new BorderPane();
 		root.setTop(queryPane);
+		root.setBorder(Expression.RED_BORDER);
 		root.setCenter(expressionPane);
+		expressionPane.setBorder(Expression.RED_BORDER);
 
 		primaryStage.setScene(new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT));
 		primaryStage.show();
