@@ -11,7 +11,8 @@ public class LiteralExpression implements Expression {
      * The numerical value that the LiteralExpression represents
      */
     protected String value;
-boolean focused = false;
+    boolean focused = false;
+
     /**
      * Creates new LiteralExpression with given int value
      *
@@ -38,7 +39,7 @@ boolean focused = false;
 
     @Override
     public void setFocused(boolean focused) {
-this.focused = focused;
+        this.focused = focused;
     }
 
     @Override
@@ -53,7 +54,7 @@ this.focused = focused;
 
     @Override
     public void flatten() {
-       //literal is already flat
+        //literal is already flat
     }
 
     @Override

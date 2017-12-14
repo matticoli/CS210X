@@ -43,12 +43,12 @@ public class ExpressionEditor extends Application {
                     System.out.println(e.getNode().getBoundsInParent());
                     if (e.getNode().contains(mouseCoords)) {
                         e.setFocused(true);
-                         e.getNode().setStyle("-fx-font:36 \"Comic Sans MS\";");
-                         e.getNode().setStyle("-fx-fill: RED");
+                        e.getNode().setStyle("-fx-font:36 \"Comic Sans MS\";");
+                        e.getNode().setStyle("-fx-fill: RED");
                     } else {
                         e.setFocused(false);
-                         e.getNode().setStyle("-fx-font:36 \"Times\";");
-                         e.getNode().setStyle("-fx-fill: BLACK");
+                        e.getNode().setStyle("-fx-font:36 \"Times\";");
+                        e.getNode().setStyle("-fx-fill: BLACK");
                     }
                 }
             } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {

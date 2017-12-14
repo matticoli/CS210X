@@ -1,7 +1,3 @@
-import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-
 public class ParentheticalExpression extends AbstractCompoundExpression {
     boolean focused;
 
@@ -12,7 +8,7 @@ public class ParentheticalExpression extends AbstractCompoundExpression {
 
     @Override
     public void setFocused(boolean focused) {
-this.focused = focused;
+        this.focused = focused;
     }
 
     @Override
@@ -25,8 +21,8 @@ this.focused = focused;
 
     @Override
     public String convertToString(int indentLevel) {
-        String s = getIndentString(indentLevel)+"()\n";
-        return s+super.convertToString(indentLevel);
+        String s = getIndentString(indentLevel) + "()\n";
+        return s + super.convertToString(indentLevel);
     }
 
 }

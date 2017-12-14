@@ -69,7 +69,7 @@ public abstract class AbstractCompoundExpression implements CompoundExpression {
                     if (this instanceof MultiplicativeExpression) {
                         boxyMcBoxFace.getChildren().add(new Label("*"));
                         boxyMcBoxFace.setBorder(Expression.GREEN_BORDER);
-                    } else if (this instanceof AdditiveExpression){
+                    } else if (this instanceof AdditiveExpression) {
                         boxyMcBoxFace.getChildren().add(new Label("+"));
                         boxyMcBoxFace.setBorder(Expression.BLUE_BORDER);
                     }
