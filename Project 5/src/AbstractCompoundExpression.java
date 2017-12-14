@@ -9,6 +9,8 @@ public abstract class AbstractCompoundExpression implements CompoundExpression {
     protected LinkedList<Expression> children;
     protected CompoundExpression parent;
 
+    private HBox node;
+
     /**
      * Constructor
      */
@@ -54,29 +56,42 @@ public abstract class AbstractCompoundExpression implements CompoundExpression {
     }
 
     public Node getNode() {
-        HBox boxyMcBoxFace = new HBox();
-        for (int i = 0; i < children.size(); i++) {
-            boxyMcBoxFace.getChildren().add(children.get(i).getNode());
+        if(this.node != null) {
+            return this.node;
+        } else {
+
+            HBox hBox = new HBox();
+            // For each child of this node
             if (this instanceof ParentheticalExpression) {
-                boxyMcBoxFace.getChildren().add(new Label("("));
+                hBox.getChildren().add(new Label("("));
                 for (Expression e : children) {
-                    boxyMcBoxFace.getChildren().add(e.getNode());
+                    hBox.getChildren().add(e.getNode());
                 }
-                boxyMcBoxFace.getChildren().add(new Label(")"));
-                boxyMcBoxFace.setBorder(Expression.RED_BORDER);
+                hBox.getChildren().add(new Label(")"));
+//                hBox.setBorder(Expression.RED_BORDER);
+            } else if (this instanceof MultiplicativeExpression) {
+                for (Expression e : children) {
+                    hBox.getChildren().add(e.getNode());
+                    hBox.getChildren().add(new Label(e != children.getLast() ? "*" : ""));
+                }
+//                hBox.setBorder(Expression.GREEN_BORDER);
+            } else if (this instanceof AdditiveExpression) {
+                for (Expression e : children) {
+                    hBox.getChildren().add(e.getNode());
+                    hBox.getChildren().add(new Label(e != children.getLast() ? "+" : ""));
+                }
+//                hBox.setBorder(Expression.BLUE_BORDER);
             } else {
-                if ((i < children.size() - 1)) {
-                    if (this instanceof MultiplicativeExpression) {
-                        boxyMcBoxFace.getChildren().add(new Label("*"));
-                        boxyMcBoxFace.setBorder(Expression.GREEN_BORDER);
-                    } else if (this instanceof AdditiveExpression) {
-                        boxyMcBoxFace.getChildren().add(new Label("+"));
-                        boxyMcBoxFace.setBorder(Expression.BLUE_BORDER);
-                    }
+                for (Expression e : children) {
+                    hBox.getChildren().add(e.getNode());
                 }
+                //hBox.getChildren().add(children.get(i).getNode());
             }
+//            for (int i = 0; i < children.size(); i++) {
+//            }
+            this.node = hBox;
+            return hBox;
         }
-        return boxyMcBoxFace;
     }
 
     @Override

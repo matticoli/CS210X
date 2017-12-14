@@ -1,5 +1,6 @@
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 
 public class LiteralExpression implements Expression {
 
@@ -12,6 +13,8 @@ public class LiteralExpression implements Expression {
      */
     protected String value;
     boolean focused = false;
+    private HBox node;
+
 
     /**
      * Creates new LiteralExpression with given int value
@@ -49,7 +52,12 @@ public class LiteralExpression implements Expression {
 
     @Override
     public Node getNode() {
-        return new Label(value);
+        if(node == null) {
+            HBox box = new HBox();
+            box.getChildren().add(new Label(value));
+            node = box;
+        }
+        return node;
     }
 
     @Override

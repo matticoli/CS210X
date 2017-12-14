@@ -1,5 +1,6 @@
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -11,6 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.LinkedList;
+
 public class ExpressionEditor extends Application {
 
 
@@ -18,17 +21,20 @@ public class ExpressionEditor extends Application {
         launch(args);
     }
 
-    static AbstractCompoundExpression expression;
+    static Expression rootExpression;
+    static Expression focusedExpression;
     static Pane expressionPane = new Pane();
 
     /**
      * Size of the GUI
      */
     private static final int WINDOW_WIDTH = 1080, WINDOW_HEIGHT = 250;
+
     /**
      * Initial expression shown in the textbox
      */
-    private static final String EXAMPLE_EXPRESSION = "2*x+3*y+4*z+(7+6*z)";
+    private static final String EXAMPLE_EXPRESSION = "2*x+3*y+4*z+(7*6+z)";
+
     /**
      * Parser used for parsing expressions.
      */
@@ -51,7 +57,7 @@ public class ExpressionEditor extends Application {
                 final Expression expression = expressionParser.parse(textField.getText(), true);
                 expressionPane.getChildren().clear();
                 Node node = expression.getNode();
-                expressionPane.setStyle("-fx-font:36 \"Arial\";");
+                expressionPane.setStyle("-fx-font:36 \"Consolas\";");
                 node.setLayoutX(WINDOW_WIDTH / 4);
                 node.setLayoutY(WINDOW_HEIGHT / 4);
                 node.applyCss();
@@ -88,38 +94,65 @@ public class ExpressionEditor extends Application {
     private static class MouseEventHandler implements EventHandler<MouseEvent> {
 
         MouseEventHandler(Pane pane_, CompoundExpression rootExpression_) {
-            expression = (AbstractCompoundExpression) rootExpression_;
+            rootExpression = (AbstractCompoundExpression) rootExpression_;
+            focusedExpression = rootExpression;
 
         }
 
         public void handle(MouseEvent event) {
-            //System.out.println(rootExp.convertToString(0));
-            /**
-             * Current Issues:
-             * No repaints. or whatever javafx does
-             * No focus change on mouse click due to bounding box issues. 
-             */
-            expressionPane.requestLayout();
             Point2D mouseCoords = new Point2D(event.getX(), event.getY());
             if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
-                System.out.println("Mouse Event at " + mouseCoords.toString());
-                for (Expression e : expression.children) {
-                    expressionPane.layout();
-                    System.out.println(e.getNode().getBoundsInParent());
-                    if (e.getNode().contains(mouseCoords)) {
-                        e.setFocused(true);
-                        e.getNode().setStyle("-fx-font:36 \"Comic Sans MS\";");
-                        e.getNode().setStyle("-fx-fill: RED");
-                    } else {
-                        e.setFocused(false);
-                        e.getNode().setStyle("-fx-font:36 \"Times\";");
-                        e.getNode().setStyle("-fx-fill: BLACK");
+                if(!(focusedExpression instanceof AbstractCompoundExpression)) {
+                    focusedExpression.setFocused(false);
+                    ((HBox) focusedExpression.getNode()).setBorder(Expression.NO_BORDER);
+                    focusedExpression = rootExpression;
+                    rootExpression.setFocused(true);
+                    return;
+                }
+                LinkedList<Expression> toCheck = new LinkedList<>();
+                {
+                    Expression cursor = focusedExpression;
+                    while(cursor != null) {
+                        toCheck.addAll(((AbstractCompoundExpression) cursor).children);
+                        cursor = focusedExpression.getParent();
                     }
                 }
+                for (Expression e : toCheck) {
+                    Bounds b = e.getNode().localToScene(e.getNode().getBoundsInLocal());
+                   if(e instanceof LiteralExpression) {
+                       System.out.println(b);
+                   }
+                    if (b.contains(mouseCoords.getX()+0,
+                            mouseCoords.getY()+25)) {
+                        if(e.isFocused()) {
+                            System.out.println("LOK AT ME");
+                            e.setFocused(false);
+                            ((HBox) e.getNode()).setBorder(Expression.NO_BORDER);
+                            focusedExpression = rootExpression;
+                            rootExpression.setFocused(true);
+                            return;
+                        }
+                        focusedExpression.setFocused(false);
+                        ((HBox) focusedExpression.getNode()).setBorder(Expression.NO_BORDER);
+
+                        e.setFocused(true);
+                        ((HBox) e.getNode()).setBorder(Expression.BLUE_BORDER);
+                        focusedExpression = e;
+                        return;
+                    } else {
+                        e.setFocused(false);
+                        ((HBox) e.getNode()).setBorder(Expression.NO_BORDER);
+                    }
+                }
+                focusedExpression.setFocused(false);
+                ((HBox) focusedExpression.getNode()).setBorder(Expression.NO_BORDER);
+                focusedExpression = rootExpression;
+                rootExpression.setFocused(true);
+
+
             } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
             } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
             }
-            System.out.println(expression.getNode().getBoundsInParent());
         }
     }
 }
