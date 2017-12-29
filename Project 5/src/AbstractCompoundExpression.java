@@ -1,21 +1,28 @@
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
-import java.awt.*;
 import java.util.LinkedList;
 
 public abstract class AbstractCompoundExpression implements CompoundExpression {
 
+    /**
+     * Linkedlist of sub expressions
+     */
     protected LinkedList<Expression> children;
+
+    /**
+     * Parent expression of this expression (null for root)
+     */
     protected CompoundExpression parent;
 
+    /**
+     * GUI Node corresponding to this expression
+     */
     private HBox node;
 
     /**
-     * Constructor
+     * Default constructor, initializes LinkedList
      */
     AbstractCompoundExpression() {
         this.children = new LinkedList<>();
@@ -48,10 +55,12 @@ public abstract class AbstractCompoundExpression implements CompoundExpression {
     @Override
     abstract public Expression deepCopy();
 
+    /**
+     *  Deep copy each child and set parent to new copy of this ParentheticalExpression
+     *  @param parentCopy deep copy of the original expression's parent to add each subexpression to
+     */
     void deepCopyChildren(CompoundExpression parentCopy) {
-        // Deep copy each child and set parent to new copy of this ParentheticalExpression
         children.forEach((child) -> {
-
             Expression childCopy = child.deepCopy();
             childCopy.setParent(parentCopy);
             parentCopy.addSubexpression(childCopy);
@@ -63,6 +72,7 @@ public abstract class AbstractCompoundExpression implements CompoundExpression {
         return getNode(false);
     }
 
+    @Override
     public Node getNode(boolean ghost) {
         if(this.node != null) {
             return this.node;
@@ -135,6 +145,12 @@ public abstract class AbstractCompoundExpression implements CompoundExpression {
         return s;
     }
 
+    /**
+     * Returns a string representation of expression tree starting at this (sub)expression
+     *
+     * @param indentLevel current indent level
+     * @return string representation of expression tree starting at this (sub)expression
+     */
     static String getIndentString(int indentLevel) {
         String s = "";
         for (int i = 0; i < indentLevel; i++) {

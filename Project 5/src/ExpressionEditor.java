@@ -19,17 +19,35 @@ import java.util.LinkedList;
 
 public class ExpressionEditor extends Application {
 
+    /**
+     * Root expression as parsed from user input
+     */
+    static Expression rootExpression;
+    /**
+     * Currently focused expression (root or sub of root)
+     */
+    static Expression focusedExpression;
+    /**
+     * Pane containing expression Nodes
+     */
+    static Pane expressionPane = new Pane();
 
+    /**
+     * Ghost node (ghostExpression's getNode() ) for dragging
+     */
+    static Node ghostNode;
+    /**
+     * deepCopy of focusedExpression for dragging
+     */
+    static Expression ghostExpression;
+
+    /**
+     * Launches JavaFX App
+     * @param args Command line args
+     */
     public static void main(String[] args) {
         launch(args);
     }
-
-    static Expression rootExpression;
-    static Expression focusedExpression;
-    static Pane expressionPane = new Pane();
-
-    static Node ghostNode;
-    static Expression ghostExpression;
 
     /**
      * Size of the GUI
@@ -50,11 +68,13 @@ public class ExpressionEditor extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Expression Editor");
+
         // Add the textbox and Parser button
         final Pane queryPane = new HBox();
         final TextField textField = new TextField(EXAMPLE_EXPRESSION);
         final Button button = new Button("Parse");
         queryPane.getChildren().add(textField);
+
         // Add the callback to handle when the Parse button is pressed
         button.setOnMouseClicked(e -> {
             // Try to parse the expression
@@ -83,6 +103,7 @@ public class ExpressionEditor extends Application {
             }
         });
         queryPane.getChildren().add(button);
+
         // Reset the color to black whenever the user presses a key
         textField.setOnKeyPressed(e -> textField.setStyle("-fx-text-fill: black"));
         final BorderPane root = new BorderPane();
@@ -110,6 +131,7 @@ public class ExpressionEditor extends Application {
 
             // If mouse release and wasn't just dragging, handle focus change
             if (event.getEventType() == MouseEvent.MOUSE_RELEASED && ghostExpression == null) {
+                // If currently focused on a LiteralExpression, focus will be reset
                 if(!(focusedExpression instanceof AbstractCompoundExpression)) {
                     focusedExpression.setFocused(false);
                     ((HBox) focusedExpression.getNode()).setBorder(Expression.NO_BORDER);
@@ -117,6 +139,8 @@ public class ExpressionEditor extends Application {
                     rootExpression.setFocused(true);
                     return;
                 }
+
+                // Create list of expressions to check for click (from focus up in tree)
                 LinkedList<Expression> toCheck = new LinkedList<>();
                 {
                     Expression cursor = focusedExpression;
@@ -125,21 +149,25 @@ public class ExpressionEditor extends Application {
                         cursor = focusedExpression.getParent();
                     }
                 }
+
+                // Check what expression was clicked
                 for (Expression e : toCheck) {
+                    // Get bounds of expression node
                     Bounds b = e.getNode().localToScene(e.getNode().getBoundsInLocal());
-                   if(e instanceof LiteralExpression) {
-                       System.out.println(b);
-                   }
+
+                    // If mouse click within bounds of node
                     if (b.contains(mouseCoords.getX()+0,
                             mouseCoords.getY()+25)) {
+                        // If focused node is clicked (from deepest level up), reset focus and return
                         if(e.isFocused()) {
-                            System.out.println("LOK AT ME");
                             e.setFocused(false);
                             ((HBox) e.getNode()).setBorder(Expression.NO_BORDER);
                             focusedExpression = rootExpression;
                             rootExpression.setFocused(true);
                             return;
                         }
+
+                        // Otherwise we want to focus this node
                         focusedExpression.setFocused(false);
                         ((HBox) focusedExpression.getNode()).setBorder(Expression.NO_BORDER);
 
@@ -148,10 +176,12 @@ public class ExpressionEditor extends Application {
                         focusedExpression = e;
                         return;
                     } else {
+                        // If this node is not focused and shouldn't be, make sure it doesn't appear as such
                         e.setFocused(false);
                         ((HBox) e.getNode()).setBorder(Expression.NO_BORDER);
                     }
                 }
+                // If no node was clicked, reset focus
                 focusedExpression.setFocused(false);
                 ((HBox) focusedExpression.getNode()).setBorder(Expression.NO_BORDER);
                 focusedExpression = rootExpression;
@@ -159,15 +189,17 @@ public class ExpressionEditor extends Application {
 
             // If drag, handle movement
             } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+                // Create the ghost node if this is the first drag handle
                 if(ghostExpression == null) {
                     ghostExpression = focusedExpression.deepCopy();
                     ghostNode = ghostExpression.getNode(true);
                     expressionPane.getChildren().add(ghostNode);
                 }
-                System.out.println("relocating");
+                // Move ghost node to mouse location
                 ghostNode.relocate(mouseCoords.getX(), mouseCoords.getY());
             // If released and just dragging, handle drop
             } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
+                // On drop, get rid of the ghost node
                 expressionPane.getChildren().remove(ghostNode);
                 ghostNode = null;
                 ghostExpression = null;
